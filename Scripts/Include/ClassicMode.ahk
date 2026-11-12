@@ -3,9 +3,9 @@
 #Include %A_ScriptDir%\Logging.ahk 
 #SingleInstance Force
 
-global githubUser := "Pokepock"
+global githubUser := "mumiheartbeat"
 global repoName := "PTCGPB"
-global localVersion := "7.4.5(C)" 
+global localVersion := "8.0.0(C)" 
 global jsonFileName := ""
 
 global scaleParam
@@ -114,7 +114,13 @@ LoadSettingsFromIni() {
     IniRead, Paldean, %A_ScriptDir%\..\..\Settings.ini, UserSettings, Paldean, 0
     IniRead, MegaShine, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaShine, 0
     IniRead, PulsingAura, %A_ScriptDir%\..\..\Settings.ini, UserSettings, PulsingAura, 0
-    
+    IniRead, ParadoxDrive, %A_ScriptDir%\..\..\Settings.ini, UserSettings, ParadoxDrive, 0
+    IniRead, EverydayWonders, %A_ScriptDir%\..\..\Settings.ini, UserSettings, EverydayWonders, 0
+    IniRead, RulersOfTheSkies, %A_ScriptDir%\..\..\Settings.ini, UserSettings, RulersOfTheSkies, 0
+    IniRead, TeamRocketsAmbition, %A_ScriptDir%\..\..\Settings.ini, UserSettings, TeamRocketsAmbition, 0
+    IniRead, DeluxeMega, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DeluxeMega, 0
+    IniRead, DualFusionMegaMewtwoX, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DualFusionMegaMewtwoX, 0
+    IniRead, DualFusionPikachu, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DualFusionPikachu, 0
     
     IniRead, CheckShinyPackOnly, %A_ScriptDir%\..\..\Settings.ini, UserSettings, CheckShinyPackOnly, 0
     IniRead, TrainerCheck, %A_ScriptDir%\..\..\Settings.ini, UserSettings, TrainerCheck, 0
@@ -217,7 +223,7 @@ SaveAllSettings() {
   global autoLaunchMonitor, autoUseGPTest, TestTime
   global CheckShinyPackOnly, TrainerCheck, FullArtCheck, RainbowCheck, ShinyCheck, CrownCheck
   global InvalidCheck, ImmersiveCheck, PseudoGodPack, minStars, Palkia, Dialga, Arceus, Shining
-  global Mew, Pikachu, Charizard, Mewtwo, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Paldean, MegaShine, PulsingAura, slowMotion, ocrLanguage, clientLanguage
+  global Mew, Pikachu, Charizard, Mewtwo, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Paldean, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulersOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu, slowMotion, ocrLanguage, clientLanguage
   global CurrentVisibleSection, heartBeatDelay, sendAccountXml, showcaseEnabled, showcaseURL, isDarkTheme
   global useBackgroundImage, tesseractPath, applyRoleFilters, debugMode, tesseractOption, statusMessage
   global s4tEnabled, s4tSilent, s4t3Dmnd, s4t4Dmnd, s4t1Star, s4tGholdengo, s4tWP, s4tWPMinCards, s4tFoil, s4tTrainer, s4tRainbow, s4tFullart, s4tShiny
@@ -341,11 +347,15 @@ SaveAllSettings() {
   IniWrite, %Paldean%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, Paldean
   IniWrite, %MegaShine%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaShine
   IniWrite, %PulsingAura%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, PulsingAura
+  IniWrite, %ParadoxDrive%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, ParadoxDrive
+  IniWrite, %EverydayWonders%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, EverydayWonders
+  IniWrite, %RulersOfTheSkies%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, RulersOfTheSkies
+  IniWrite, %TeamRocketsAmbition%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, TeamRocketsAmbition
+  IniWrite, %DeluxeMega%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DeluxeMega
+  IniWrite, %DualFusionMegaMewtwoX%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DualFusionMegaMewtwoX
+  IniWrite, %DualFusionPikachu%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DualFusionPikachu
   
-  
-    
- 
- 
+
   ; Card Detection
   IniWrite, %CheckShinyPackOnly%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, CheckShinyPackOnly
   IniWrite, %TrainerCheck%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, TrainerCheck
@@ -640,52 +650,28 @@ Gui, Add, DropDownList, vFutureBonusPos choose%defaultFutureBonusPos% x450 y563 
 ; ========== Column 3 ==========
 ; ==============================
 sectionColor := "cFFD700" ; Gold
-Gui, Add, Tab3, x505 y5 w240 h130 vBPacks Theme0 cFFD700, B3s|B2s|B1s 
+Gui, Add, Tab3, x505 y5 w240 h130 vBPacks Theme0 cFFD700, B4s|B3s|B2s|B1s 
 
 Gui, Tab, 1
-Gui, Add, Checkbox, % (PulsingAura ? "Checked" : "") " vPulsingAura x520 y35 " . sectionColor, % currentDictionary.Txt_PulsingAura
+Gui, Add, Checkbox, % (DeluxeMega ? "Checked" : "") " vDeluxeMega x520 y35 " . sectionColor, % currentDictionary.Txt_DeluxeMega
+Gui, Add, Checkbox, % (TeamRocketsAmbition ? "Checked" : "") " vTeamRocketsAmbition x520 y60 " . sectionColor, % currentDictionary.Txt_TeamRocketsAmbition
+Gui, Add, Checkbox, % (RulersOfTheSkies ? "Checked" : "") " vRulersOfTheSkies x520 y85 " . sectionColor, % currentDictionary.Txt_RulersOfTheSkies
 
-Gui, Tab, 2 
+Gui, Tab, 2
+Gui, Add, Checkbox, % (EverydayWonders ? "Checked" : "") " vEverydayWonders x520 y35 " . sectionColor, % currentDictionary.Txt_EverydayWonders
+Gui, Add, Checkbox, % (ParadoxDrive ? "Checked" : "") " vParadoxDrive x520 y60 " . sectionColor, % currentDictionary.Txt_ParadoxDrive
+Gui, Add, Checkbox, % (PulsingAura ? "Checked" : "") " vPulsingAura x520 y85 " . sectionColor, % currentDictionary.Txt_PulsingAura
+
+Gui, Tab, 3
 Gui, Add, Checkbox, % (MegaShine ? "Checked" : "") " vMegaShine x520 y35 " . sectionColor, % currentDictionary.Txt_MegaShine
 Gui, Add, Checkbox, % (Paldean ? "Checked" : "") " vPaldean x520 y60 " . sectionColor, % currentDictionary.Txt_Paldean
 Gui, Add, Checkbox, % (MegaGardevoir ? "Checked" : "") " vMegaGardevoir x520 y85 " . sectionColor, % currentDictionary.Txt_MegaGardevoir
 ; B1 Series Group Box (3 items)
-Gui, Tab, 3
+Gui, Tab, 4
 Gui, Add, Checkbox, % (MegaCharizardY ? "Checked" : "") " vMegaCharizardY x520 y35 " . sectionColor, % currentDictionary.Txt_MegaCharizardY
 Gui, Add, Checkbox, % (MegaBlaziken ? "Checked" : "") " vMegaBlaziken x520 y60 " . sectionColor, % currentDictionary.Txt_MegaBlaziken
 Gui, Add, Checkbox, % (MegaGyarados ? "Checked" : "") " vMegaGyarados x520 y85 " . sectionColor, % currentDictionary.Txt_MegaGyarados
 Gui, Add, Checkbox, % (MegaAltaria ? "Checked" : "") " vMegaAltaria x520 y110 " . sectionColor, % currentDictionary.Txt_MegaAltaria
-/*
-
-; A4 Series Group Box 
-Gui, Add, GroupBox, x505 y110 w240 h90 %sectionColor%, A4 series
-Gui, Add, Checkbox, % (Deluxe ? "Checked" : "") " vDeluxe x515 y140 " . sectionColor, % currentDictionary.Txt_Deluxe
-Gui, Add, Checkbox, % (Suicune ? "Checked" : "") " vSuicune x635 y140 " . sectionColor, % currentDictionary.Txt_Suicune
-Gui, Add, Checkbox, % (HoOh ? "Checked" : "") " vHooH x515 y165 " . sectionColor, % currentDictionary.Txt_HoOh
-Gui, Add, Checkbox, % (Lugia ? "Checked" : "") " vLugia x635 y165 " . sectionColor, % currentDictionary.Txt_Lugia
-
-
-; A3 Series Group Box 
-Gui, Add, GroupBox, x505 y205 w240 h90 %sectionColor%, A3 series
-Gui, Add, Checkbox, % (Eevee ? "Checked" : "") " vEevee x515 y235 " . sectionColor, % currentDictionary.Txt_Eevee
-Gui, Add, Checkbox, % (Buzzwole ? "Checked" : "") " vBuzzwole x635 y235 " . sectionColor, % currentDictionary.Txt_Buzzwole
-Gui, Add, Checkbox, % (Solgaleo ? "Checked" : "") " vSolgaleo x515 y260 " . sectionColor, % currentDictionary.Txt_Solgaleo
-Gui, Add, Checkbox, % (Lunala ? "Checked" : "") " vLunala x635 y260 " . sectionColor, % currentDictionary.Txt_Lunala
-
-; A2 Series Group Box 
-Gui, Add, GroupBox, x505 y300 w240 h90 %sectionColor%, A2 series
-Gui, Add, Checkbox, % (Shining ? "Checked" : "") " vShining x515 y330 " . sectionColor, % currentDictionary.Txt_Shining
-Gui, Add, Checkbox, % (Arceus ? "Checked" : "") " vArceus x635 y330 " . sectionColor, % currentDictionary.Txt_Arceus
-Gui, Add, Checkbox, % (Dialga ? "Checked" : "") " vDialga x515 y355 " . sectionColor, % currentDictionary.Txt_Dialga
-Gui, Add, Checkbox, % (Palkia ? "Checked" : "") " vPalkia x635 y355 " . sectionColor, % currentDictionary.Txt_Palkia
-
-; A1 Series Group Box 
-Gui, Add, GroupBox, x505 y395 w240 h90 %sectionColor%, A1 series
-Gui, Add, Checkbox, % (Mew ? "Checked" : "") " vMew x515 y425 " . sectionColor, % currentDictionary.Txt_Mew
-Gui, Add, Checkbox, % (Charizard ? "Checked" : "") " vCharizard x635 y425 " . sectionColor, % currentDictionary.Txt_Charizard
-Gui, Add, Checkbox, % (Mewtwo ? "Checked" : "") " vMewtwo x515 y450 " . sectionColor, % currentDictionary.Txt_Mewtwo
-Gui, Add, Checkbox, % (Pikachu ? "Checked" : "") " vPikachu x635 y450 " . sectionColor, % currentDictionary.Txt_Pikachu
-*/
 
 sectionColor := "cE5CAFF" 
 Gui, Add, Tab3, x505 y140 w240 h130 vLegacyPacks Theme0 cE5CAFF, A4s|A3s|A2s|A1s 
@@ -715,13 +701,17 @@ Gui, Add, Checkbox, % (Mewtwo ? "Checked" : "") " vMewtwo x520 y220 " . sectionC
 Gui, Add, Checkbox, % (Pikachu ? "Checked" : "") " vPikachu x520 y245 " . sectionColor, % currentDictionary.Txt_Pikachu
 Gui, Tab
 
-; ========== Rename Setting ==========
+
 sectionColor := "cFFDDAA" ; 
-Gui, Add, Tab3, x505 y275 w240 h215 vextrafunctions Theme0 cFFDDAA, Rename Mode|Change LNG 
+Gui, Add, Tab3, x505 y275 w240 h215 vextrafunctions Theme0 cFFDDAA, C1s|Rename|Change LNG 
 
 Gui, Tab, 1 
-Gui, Add, Checkbox, % (RenameMode ? "Checked" : "") " vRenameMode x520 y310 gRenameSettings " . sectionColor, RenameMode
+Gui, Add, Checkbox, % (DualFusionMegaMewtwoX ? "Checked" : "") " vDualFusionMegaMewtwoX x520 y310 " . sectionColor, % currentDictionary.Txt_DualFusionMegaMewtwoX
+Gui, Add, Checkbox, % (DualFusionPikachu ? "Checked" : "") " vDualFusionPikachu x520 y335 " . sectionColor, % currentDictionary.Txt_DualFusionPikachu
 
+; ========== Rename Setting ==========
+Gui, Tab, 2 
+Gui, Add, Checkbox, % (RenameMode ? "Checked" : "") " vRenameMode x520 y310 gRenameSettings " . sectionColor, RenameMode
 
 if(StrLen(targetUsername) < 3)
   targetUsername =
@@ -744,7 +734,7 @@ if (RenameMode) {
 
 
 ; ========== Change LNG Setting ==========
-Gui, Tab, 2
+Gui, Tab, 3
 Gui, Add, Checkbox, % (ChangeLNMode ? "Checked" : "") " vChangeLNMode x520 y310 gChangeLNSettings " . sectionColor, Change LNG Mode
 
 targetLanguageList := "en|es|fr|de|it|pt|jp|ko|cn"
@@ -762,8 +752,6 @@ if (targetLanguageList != "")
     }
   }
 }
-
-
 
 if(ChangeLNMode){
     Gui, Add, Text, vtxt_targetLN x520 y340 %sectionColor%, Target LNG:
@@ -1742,7 +1730,21 @@ StartBot:
         Selected.Push("MegaShine")
     if(PulsingAura)
         Selected.Push("PulsingAura")
-    
+    if(ParadoxDrive)
+        Selected.Push("ParadoxDrive")
+    if(EverydayWonders)
+        Selected.Push("EverydayWonders")
+    if(RulersOfTheSkies)
+        Selected.Push("RulersOfTheSkies")
+    if(TeamRocketsAmbition)
+        Selected.Push("TeamRocketsAmbition")
+    if(DeluxeMega)
+        Selected.Push("DeluxeMega")
+    if(DualFusionMegaMewtwoX)
+        Selected.Push("DualFusionMegaMewtwoX")
+    if(DualFusionPikachu)
+        Selected.Push("DualFusionPikachu")
+
     for index, value in Selected {
         if(index = Selected.MaxIndex())
             commaSeparate := ","

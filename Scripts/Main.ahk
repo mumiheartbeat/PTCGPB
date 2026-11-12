@@ -182,6 +182,18 @@ Loop {
 
 
         Loop {
+            ; ===== 配合得卡機制換日前五分鐘暫停 =====
+            changeDate := getChangeDateTime() ; get server reset time
+            PauseStartTime := changeDate
+            PauseStartTime += -5, minutes
+
+            if (A_Now >= PauseStartTime && A_Now < changeDate) {
+                FormatTime, currentFormattedTime, A_Now, HH:mm:ss
+                CreateStatusMessage("Auto Pausing... at " . currentFormattedTime ,,,, false)
+                pause
+            }
+            ; ====================================
+
             if(FindOrLoseImage(99Leftx, 110, 99Rightx, 127, , 99Path, 0, failSafeTime)) {
                 if (autoUseGPTest && autotest_time >= TestTime) {
                     A_gptest := 1
@@ -201,6 +213,8 @@ Loop {
                 adbClick(143, 493)
                 break
             } else if(FindOrLoseImage(225, 195, 250, 220, , "Pending", 0, failSafeTime)) {
+                adbClick(245, 210)
+            } else if(FindOrLoseImage(225, 195, 250, 220, , "Pending2", 0, failSafeTime)) {
                 adbClick(245, 210)
             } else if(FindOrLoseImage(186, 496, 206, 518, , "Accept", 0, failSafeTime)) {
                 if(heartBeat)
@@ -1432,6 +1446,27 @@ SoloBattle() {
     }
 
     AutoSolo := False
+}
+
+getChangeDateTime() {
+    offset := A_Now
+    currenttimeutc := A_NowUTC
+    EnvSub, offset, %currenttimeutc%, Hours   ;offset from local timezone to UTC
+
+    resetTime := SubStr(A_Now, 1, 8) "060000" ;today at 6am [utc] zero seconds is the reset time at UTC
+    resetTime += offset, Hours                ;reset time in local timezone
+
+    ;find the closest reset time
+    currentTime := A_Now
+    timeToReset := resetTime
+    EnvSub, timeToReset, %currentTime%, Hours
+    if(timeToReset > 12) {
+        resetTime += -1, Days
+    } else if (timeToReset < -12) {
+        resetTime += 1, Days
+    }
+
+    return resetTime
 }
 
 isMuMuv5(){

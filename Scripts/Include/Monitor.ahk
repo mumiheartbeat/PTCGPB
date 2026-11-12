@@ -84,15 +84,21 @@ Loop {
     }
     
     if(mainMonitor && runMain){
-    
+
         Loop %Mains% {
+
+            ; ===== 配合得卡機制換日後一小時Main暫停也不會重啟 =====
+            changeDate := getChangeDateTime() ; get server reset time
+            PauseEndTime := changeDate
+            PauseEndTime += 60, minutes
+            ; =================================================
+
             instanceNum := "Main"
             if(A_Index > 1)
                 instanceNum .= Format("{:u}", A_Index)
             IniRead, LastAcceptEpoch, %A_ScriptDir%\..\%instanceNum%.ini, Metrics, LastAcceptEpoch, 0
             secondsSinceLastEnd := nowEpoch - LastAcceptEpoch
-            if(LastAcceptEpoch > 0 && secondsSinceLastEnd > (mainsMonitorCD * 60))
-            {
+            if(LastAcceptEpoch > 0 && secondsSinceLastEnd > (mainsMonitorCD * 60) && (A_Now < changeDate || A_Now > PauseEndTime)) {
                 ; msgbox, Killing Instance %instanceNum%! Last Run Completed %secondsSinceLastEnd% Seconds Ago
                 msg := "Killing Instance Main ! Last Accept Completed " . secondsSinceLastEnd . " Seconds Ago"
                 LogToFile(msg, "Monitor.txt")
@@ -125,6 +131,27 @@ Loop {
     
     ; Check for dead instances every 30 seconds
     Sleep, 30000
+}
+
+getChangeDateTime() {
+    offset := A_Now
+    currenttimeutc := A_NowUTC
+    EnvSub, offset, %currenttimeutc%, Hours   ;offset from local timezone to UTC
+
+    resetTime := SubStr(A_Now, 1, 8) "060000" ;today at 6am [utc] zero seconds is the reset time at UTC
+    resetTime += offset, Hours                ;reset time in local timezone
+
+    ;find the closest reset time
+    currentTime := A_Now
+    timeToReset := resetTime
+    EnvSub, timeToReset, %currentTime%, Hours
+    if(timeToReset > 12) {
+        resetTime += -1, Days
+    } else if (timeToReset < -12) {
+        resetTime += 1, Days
+    }
+
+    return resetTime
 }
 
 killAHK(scriptName := "")

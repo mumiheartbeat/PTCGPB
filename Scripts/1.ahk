@@ -22,7 +22,7 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 global RESTART_LOOP_EXCEPTION := { message: "Restarting main loop" }
 global winTitle, changeDate, failSafe, openPack, Delay, failSafeTime, StartSkipTime, Columns, failSafe, scriptName, GPTest, StatusText, setSpeed, jsonFileName, pauseToggle, SelectedMonitorIndex, swipeSpeed, godPack, scaleParam, deleteMethod, packs, FriendID, friendIDs, Instances, username, friendCode, stopToggle, friended, runMain, Mains, showStatus, injectMethod, packMethod, loadDir, loadedAccount, nukeAccount, CheckShinyPackOnly, TrainerCheck, FullArtCheck, RainbowCheck, ShinyCheck, dateChange, foundGP, friendsAdded, PseudoGodPack, packArray, CrownCheck, ImmersiveCheck, InvalidCheck, slowMotion, screenShot, accountFile, invalid, starCount, keepAccount
 global twoPlusOne, twoPlusDia
-global Mewtwo, Charizard, Pikachu, Mew, Dialga, Palkia, Arceus, Shining, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Latest, Paldean, MegaShine, PulsingAura
+global Mewtwo, Charizard, Pikachu, Mew, Dialga, Palkia, Arceus, Shining, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Latest, Paldean, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulersOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu
 global shinyPacks, minStars, minStarsShiny
 global DeadCheck
 global s4tEnabled, s4tSilent, s4t3Dmnd, s4t4Dmnd, s4t1Star, s4tGholdengo, s4tFoil, s4tTrainer, s4tRainbow, s4tFullArt, s4tShiny, s4tDiscordWebhookURL, s4tDiscordUserId, s4tSendAccountXml
@@ -113,7 +113,14 @@ IniRead, twoPlusOne, %A_ScriptDir%\..\Settings.ini, UserSettings, twoPlusOne, 0
 IniRead, twoPlusDia, %A_ScriptDir%\..\Settings.ini, UserSettings, twoPlusDia, 0
 
 IniRead, Latest, %A_ScriptDir%\..\Settings.ini, UserSettings, Latest, 0
-IniRead, PulsingAura, %A_ScriptDir%\..\Settings.ini, UserSettings, PulsingAura, 1
+IniRead, DualFusionPikachu, %A_ScriptDir%\..\Settings.ini, UserSettings, DualFusionPikachu, 1
+IniRead, DualFusionMegaMewtwoX, %A_ScriptDir%\..\Settings.ini, UserSettings, DualFusionMegaMewtwoX, 1
+IniRead, DeluxeMega, %A_ScriptDir%\..\Settings.ini, UserSettings, DeluxeMega, 0
+IniRead, TeamRocketsAmbition, %A_ScriptDir%\..\Settings.ini, UserSettings, TeamRocketsAmbition, 0
+IniRead, RulersOfTheSkies, %A_ScriptDir%\..\Settings.ini, UserSettings, RulersOfTheSkies, 0
+IniRead, EverydayWonders, %A_ScriptDir%\..\Settings.ini, UserSettings, EverydayWonders, 0
+IniRead, ParadoxDrive, %A_ScriptDir%\..\Settings.ini, UserSettings, ParadoxDrive, 0
+IniRead, PulsingAura, %A_ScriptDir%\..\Settings.ini, UserSettings, PulsingAura, 0
 IniRead, MegaShine, %A_ScriptDir%\..\Settings.ini, UserSettings, MegaShine, 0
 IniRead, Paldean, %A_ScriptDir%\..\Settings.ini, UserSettings, Paldean, 0
 IniRead, MegaGardevoir, %A_ScriptDir%\..\Settings.ini, UserSettings, MegaGardevoir, 0
@@ -195,7 +202,7 @@ IniRead, secondWebhook, %A_ScriptDir%\..\Settings.ini, UserSettings, secondWebho
 
 
 MuMuv5 := 1
-pokemonList := ["Mewtwo", "Charizard", "Pikachu", "Mew", "Dialga", "Palkia", "Arceus", "Shining", "Solgaleo", "Lunala", "Buzzwole", "Eevee", "HoOh", "Lugia", "Suicune", "Deluxe", "MegaBlaziken", "MegaGyarados", "MegaAltaria", "MegaCharizardY", "MegaGardevoir", "Latest", "Paldean", "MegaShine", "PulsingAura"]
+pokemonList := ["Mewtwo", "Charizard", "Pikachu", "Mew", "Dialga", "Palkia", "Arceus", "Shining", "Solgaleo", "Lunala", "Buzzwole", "Eevee", "HoOh", "Lugia", "Suicune", "Deluxe", "MegaBlaziken", "MegaGyarados", "MegaAltaria", "MegaCharizardY", "MegaGardevoir", "Latest", "Paldean", "MegaShine", "PulsingAura", "ParadoxDrive", "EverydayWonders", "RulersOfTheSkies", "TeamRocketsAmbition", "DeluxeMega", "DualFusionMegaMewtwoX", "DualFusionPikachu"]
 shinyPacks := {"Shining": 1, "Solgaleo": 1, "Lunala": 1, "Buzzwole": 1, "Eevee": 1, "HoOh": 1, "Lugia": 1, "Suicune": 1, "Deluxe": 1, "MegaBlaziken": 1, "MegaGyarados": 1, "MegaAltaria": 1}
 
 PlatinConfig := { "menuName": "Platin", "menuX1": 38, "menuY1": 145, "menuX2": 65, "menuY2": 170, "menuCX": 18, "menuCY": 109
@@ -878,7 +885,6 @@ Loop {
             if(deleteMethod = "Inject for Reroll" && openExtraPack) {
                 GoToMain(true)
                 GetAllRewards(false, true)
-                
             }
 			
 			; Bonus Week
@@ -1251,11 +1257,11 @@ RemoveFriends() {
         ;}
         adbClick(58, 190)
         Delay(1)
-        if(FindOrLoseImage(87, 401, 99, 412, , "Accepted2", 0, failSafeTime)){
-            FindImageAndClick(135, 355, 160, 385, , "Remove", 145, 407)
+        if(FindOrLoseImage(80, 420, 105, 450, , "Accepted2", 0, failSafeTime)){
+            FindImageAndClick(135, 355, 160, 385, , "Remove", 145, 435)
             Loop{
                 adbClick_wbb(200, 372)
-                if(FindOrLoseImage(70, 395, 100, 420, , "Send2",0))
+                if(FindOrLoseImage(70, 420, 100, 450, , "Send2",0))
                     break
                 else if(FindOrLoseImage(120, 178, 155, 210, , "Error", 0)) {
                     adbClick_wbb(139, 371)
@@ -1287,7 +1293,7 @@ RemoveFriends() {
             failSafeTime := 0
             break
         }
-        if(FindOrLoseImage(70, 395, 100, 420, , "Send2", 0, failSafeTime)) {
+        if(FindOrLoseImage(70, 420, 100, 450, , "Send2", 0, failSafeTime)) {
             adbClick(143, 507)
             Delay(1)
             friendsProcessed++
@@ -1328,7 +1334,7 @@ TradeTutorial() {
     }
 
     if(FindOrLoseImage(133, 479, 147, 493, , "noticex", 0)){
-        Delay(3)
+        Delay(2)
         adbClick_wbb(137, 485)
         Delay(1)
     }
@@ -1461,9 +1467,10 @@ AddFriends(renew := false, getFC := false) {
         ;}
         failSafe := A_TickCount
         failSafeTime := 0
+
+        adbInput(value)
+        Delay(1)
         Loop {
-            adbInput(value)
-            Delay(1)
             if(FindOrLoseImage(143, 350, 160, 395, , "SearchOK1", 0, failSafeTime)) {
                 break
             }
@@ -1475,38 +1482,32 @@ AddFriends(renew := false, getFC := false) {
         failSafe := A_TickCount
         failSafeTime := 0
         Loop {
-            Delay(1)
             adbClick_wbb(200, 375)
             if(FindOrLoseImage(165, 250, 190, 275, , "Send", 0, failSafeTime)) {
-                adbClick_wbb(243, 258)
-                adbClick_wbb(243, 258)
-                adbClick_wbb(243, 258)
-                break
-            }
-            else if(FindOrLoseImage(165, 240, 255, 270, , "Withdraw", 0, failSafeTime)) {
                 Delay(1)
+                adbClick_wbb(243, 258)
                 break
-            }
-            else if(FindOrLoseImage(165, 250, 190, 275, , "Accepted", 0, failSafeTime)) {
+            } else if(FindOrLoseImage(165, 240, 255, 270, , "Withdraw", 0, failSafeTime)) {
+                break
+            } else if(FindOrLoseImage(165, 250, 190, 275, , "Accepted", 0, failSafeTime)) {
                 if(renew){
                     FindImageAndClick(135, 355, 160, 385, , "Remove", 193, 258)
                     FindImageAndClick(165, 250, 190, 275, , "Send", 200, 372)
-                    adbClick_wbb(243, 258)
-                    adbClick_wbb(243, 258)
+                    Delay(1)
                     adbClick_wbb(243, 258)
                 }
                 break
             } else if(FindOrLoseImage(120, 178, 155, 210, , "Error", 0)) {
-                    adbClick_wbb(139, 371)
-                    Delay(2)
-                    adbClick_wbb(139, 392)
-                    Delay(2)
-                    adbClick_wbb(139, 386)
-                    Delay(2)
-                    returnToSocial(true)
-                    restartGameCount := 0
-                    failSafe := A_TickCount
-                    Goto, reAdd
+                adbClick_wbb(139, 371)
+                Delay(2)
+                adbClick_wbb(139, 392)
+                Delay(2)
+                adbClick_wbb(139, 386)
+                Delay(2)
+                returnToSocial(true)
+                restartGameCount := 0
+                failSafe := A_TickCount
+                Goto, reAdd
             }
             Delay(1)
             failSafeTime := (A_TickCount - failSafe) // 1000
@@ -1540,7 +1541,7 @@ AddFriends(renew := false, getFC := false) {
             EraseInput(index, n)
         }
         else {
-            Sleep, 3000
+            Sleep, 2000
             loop 5 {
                 if(FindOrLoseImage(120, 178, 155, 210, , "Error", 0)){
                     adbClick_wbb(139, 371)
@@ -1693,6 +1694,19 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
         }
     }
 
+    ; ===== 每週特別包開包 =====
+    static spLastCheck := 0
+    if (imageName != "SpecialPack" && A_TickCount - spLastCheck > 700) {
+        spLastCheck := A_TickCount
+        Path = %imagePath%SpecialPack.png
+        pNeedle := GetNeedle(Path)
+        vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 110, 180, 165, 200, 60)
+        if (vRet = 1) {
+            adbClick_wbb(200, 380)
+            Sleep, 1000
+            PackOpening(true)
+        }
+    }
 
     if(imageName = "Social" || imageName = "Add" || imageName = "Add2") {
         TradeTutorial()
@@ -2468,7 +2482,7 @@ FoundTradeable(foundCards) {
         if (injectMethod && IsFunc("ocr")) {
             playerName := ""
             allowedUsernameChars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+"
-            usernamePattern := "[\w-]+"
+            usernamePattern := "[^\x00-\x1F\x7F-\x9F]+"
 
             if(RefinedOCRText(usernameScreenshotFile, 175, 230, 188, 48, allowedUsernameChars, usernamePattern, playerName)) {
                 username := playerName
@@ -2555,7 +2569,7 @@ FoundStars(star) {
             if (injectMethod && IsFunc("ocr")) {
                 playerName := ""
                 allowedUsernameChars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+"
-                usernamePattern := "[\w-]+"
+                usernamePattern := "[^\x00-\x1F\x7F-\x9F]+"
 
                 if(RefinedOCRText(usernameScreenshotFile, 175, 230, 188, 48, allowedUsernameChars, usernamePattern, playerName)) {
                     username := playerName
@@ -2621,31 +2635,48 @@ FindBorders(prefix) {
     for index, value in borderCoords {
         coords := borderCoords[A_Index]
         imageName := "" ; prevents accidentally reusing previously loaded imageName if imageName is undefined in custom one-off needles
-        currentSearchVariation := searchVariation
-        if (InStr(prefix, "foil")) {
-            imageName := prefix . A_Index
-            currentSearchVariation := 20
-        } else if (openPack = "Deluxe") {
-            imageIndex := (A_Index >= 3) ? (A_Index + 1) : (A_Index + 3)
-            imageName := prefix . imageIndex
-            currentSearchVariation := searchVariation
-        } else if (is6CardPack && A_Index >= 4) {
-            ; Bottom row of 6-card pack (positions 4, 5, 6), re-use top row images
-            imageIndex := A_Index - 3  ; Card 4 -> uses Card 1 needle, 5->2, 6->3
-            imageName := prefix . imageIndex
-            currentSearchVariation := searchVariation6Card
-        } else {
-            ; Top row of 6-card pack, or any position in 5-card pack, use the 'real' needles
-            imageName := prefix . A_Index
-            currentSearchVariation := searchVariation
-        }
-        
-        Path := A_ScriptDir . "\Scale125\" . imageName . ".png"
-        if (FileExist(Path)) {
-            pNeedle := GetNeedle(Path)
-            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, coords[1], coords[2], coords[3], coords[4], currentSearchVariation)
-            if (vRet = 1) {
+        if (prefix = "fullart") {
+            currentSearchVariation := 60
+            matched := false
+
+            Loop, Files, % A_ScriptDir . "\Scale125\fullart*.png", F
+            {
+                Path := A_LoopFileFullPath
+                pNeedle := GetNeedle(Path)
+                vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, coords[1], coords[2], coords[3], coords[4], currentSearchVariation)
+                if (vRet = 1) {
+                    matched := true
+                    break
+                }
+            }
+            if (matched) {
                 count += 1
+            }
+        } else {
+            if (InStr(prefix, "foil")) {
+                imageName := prefix . A_Index
+                currentSearchVariation := 20
+            } else if (openPack = "Deluxe") {
+                imageIndex := (A_Index >= 3) ? (A_Index + 1) : (A_Index + 3)
+                imageName := prefix . imageIndex
+                currentSearchVariation := searchVariation
+            } else if (is6CardPack && A_Index >= 4) {
+                ; Bottom row of 6-card pack (positions 4, 5, 6), re-use top row images
+                imageIndex := A_Index - 3  ; Card 4 -> uses Card 1 needle, 5->2, 6->3
+                imageName := prefix . imageIndex
+                currentSearchVariation := searchVariation6Card
+            } else {
+                ; Top row of 6-card pack, or any position in 5-card pack, use the 'real' needles
+                imageName := prefix . A_Index
+                currentSearchVariation := searchVariation
+            }
+            Path := A_ScriptDir . "\Scale125\" . imageName . ".png"
+            if (FileExist(Path)) {
+                pNeedle := GetNeedle(Path)
+                vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, coords[1], coords[2], coords[3], coords[4], currentSearchVariation)
+                if (vRet = 1) {
+                    count += 1
+                }
             }
         }
     }
@@ -2759,7 +2790,7 @@ GodPackFound(validity) {
         if (injectMethod && IsFunc("ocr")) {
             playerName := ""
             allowedUsernameChars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+"
-            usernamePattern := "[\w-]+"
+            usernamePattern := "[^\x00-\x1F\x7F-\x9F]+"
 
             if(RefinedOCRText(usernameScreenshotFile, 175, 230, 188, 48, allowedUsernameChars, usernamePattern, playerName)) {
                 username := playerName
@@ -3205,7 +3236,7 @@ ReadFile(filename, numbers := false) {
 
     values := []
     for _, val in StrSplit(Trim(content), "`n") {
-        cleanVal := RegExReplace(val, "[^a-zA-Z0-9]") ; Remove non-alphanumeric characters
+        cleanVal := RegExReplace(val, "[\x00-\x1F\x7F-\x9F]") ; Remove non-alphanumeric characters
         if (cleanVal != "")
             values.Push(cleanVal)
     }
@@ -3965,7 +3996,7 @@ DoTutorial() {
 
     adbClick_wbb(140, 424)
 
-    FindImageAndClick(225, 273, 235, 290, , "Pack", 140, 424) ;wait for pack to be ready  to trace
+    FindImageAndClick(215, 265, 245, 300, 60, "Pack", 140, 424) ;wait for pack to be ready  to trace
     if(setSpeed > 1) {
         FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
         FindImageAndClick(ModSets.oneX1, ModSets.oneY1, ModSets.oneX2, ModSets.oneY2, , ModSets.oneName, ModSets.oneCX, ModSets.oneCY) ; click mod settings
@@ -3977,7 +4008,7 @@ DoTutorial() {
     Loop {
         adbSwipe_wbb(adbSwipeParams)
         Sleep, 10
-        if (FindOrLoseImage(225, 273, 235, 290, , "Pack", 1, failSafeTime)){
+        if (FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 1, failSafeTime)){
             if(setSpeed > 1) {
                 ;FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
                 if(setSpeed = 3)
@@ -4062,7 +4093,7 @@ DoTutorial() {
     Delay(3)
     adbClick_wbb(142, 436)
 
-    FindImageAndClick(225, 273, 235, 290, , "Pack", 239, 497) ;wait for pack to be ready  to Trace
+    FindImageAndClick(215, 265, 245, 300, 60, "Pack", 239, 497) ;wait for pack to be ready  to Trace
     if(setSpeed > 1) {
         FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
         FindImageAndClick(ModSets.oneX1, ModSets.oneY1, ModSets.oneX2, ModSets.oneY2, , ModSets.oneName, ModSets.oneCX, ModSets.oneCY) ; click mod settings
@@ -4074,7 +4105,7 @@ DoTutorial() {
     Loop {
         adbSwipe_wbb(adbSwipeParams)
         Sleep, 10
-        if (FindOrLoseImage(225, 273, 235, 290, , "Pack", 1, failSafeTime)){
+        if (FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 1, failSafeTime)){
             if(setSpeed > 1) {
                 ;FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
                 if(setSpeed = 3)
@@ -4198,33 +4229,31 @@ SelectPack(HG := false) {
     
     packy := HomeScreenAllPackY
 
+    ; 按照主畫面卡包位置順序 [左, 中, 右]
+    HomeScreenlist := ["TeamRocketsAmbition", "DualFusionMegaMewtwoX", "DualFusionPikachu"]
+    Latestlist := ["DualFusionMegaMewtwoX", "DualFusionPikachu"]
 
-    Latestlist := ["PulsingAura"]
-    Randmax := Latestlist.Length()
-    Random, rand, 1, Randmax
-    if (openPack == "Latest")
+    if (openPack == "Latest") {
+        Random, rand, 1, Latestlist.Length()
         openPack := Latestlist[rand]
-
-    if (openPack == "Paldean") {
-        packx := LeftPackX
-    } else if (openPack == "MegaShine") {
-        packx := RightPackX
-    } else {
-        packx := MiddlePackX
     }
 
-    if(openPack == "MegaShine" || openPack == "Paldean" || openPack == "PulsingAura") {
-        PackIsInHomeScreen := 1
-    } else {
-        PackIsInHomeScreen := 0
+    PackIsLatest := 0
+    for index, value in Latestlist {
+        if (openPack == value)
+            PackIsLatest := 1
     }
 
-    if(openPack == "PulsingAura") {
-        PackIsLatest := 1
-    } else {
-        PackIsLatest := 0
+    posIndex := 0
+    PackIsInHomeScreen := 0
+    for index, value in HomeScreenlist {
+        if (openPack == value) {
+            posIndex := index
+            PackIsInHomeScreen := 1
+        }
     }
-
+    ; 對應 HomeScreenlist 順序，找出目前主畫面卡包的位置
+    packx := (posIndex == 1) ? LeftPackX : (posIndex == 3) ? RightPackX : MiddlePackX
 
     if(HG = "First" && injectMethod && loadedAccount ){
         ; when First and injection, if there are free packs, we don't land/start in home screen,
@@ -4304,67 +4333,131 @@ SelectPack(HG := false) {
     }
 
     if(inselectexpansionscreen) {
-        adbClick(61, 472)
-        Delay(1)
-
-        if(openPack == "MegaGyarados" || openPack == "MegaAltaria" || openPack == "MegaBlaziken" || openPack == "MegaCharizardY") {
-            FindImageAndClick(12, 453, 28, 473, , "Bpacks", 58, 464, sleepTime)
+        if (openPack == "DualFusionMegaMewtwoX" || openPack == "DualFusionPikachu") {
+            adbClick(61, 460)
             Delay(1)
-            if (openPack == "MegaGyarados")
-            {
-                packy := SelectExpansionHomeSecondRowY
-                packx := SelectExpansionRightCollumnMiddleX
-            }
-            else {
-                loop 3 {
-                    adbSwipe("135 500 135 30 500")
-                    Delay(2)
-                    adbSwipe("135 500 135 30 500")
-                    Delay(2)
-                }
-                Delay(5)
-                if (openPack == "MegaCharizardY"){
+            FindImageAndClick(88, 445, 104, 475, , "Bpacks", 150, 460, sleepTime) ;C系列也用B的辨識圖片
+            Delay(1)
+            if (openPack == "DualFusionMegaMewtwoX"){
+                packy := SelectExpansionFirstRowY
+                packx := SelectExpansionLeftCollumnMiddleX + 2PackExpansionLeft
+            } else if (openPack == "DualFusionPikachu") {
+                packy := SelectExpansionFirstRowY
+                packx := SelectExpansionLeftCollumnMiddleX + 2PackExpansionRight
+            } 
+		}
+
+        else if(openPack == "MegaGyarados" || openPack == "MegaBlaziken" || openPack == "MegaAltaria" || openPack == "MegaCharizardY" || openPack == "MegaGardevoir" || openPack = "Paldean" || openPack = "MegaShine" || openPack = "PulsingAura" || openPack = "ParadoxDrive" || openPack == "EverydayWonders" || openPack == "RulersOfTheSkies" || openPack == "TeamRocketsAmbition" || openPack == "DeluxeMega") {
+            FindImageAndClick(88, 445, 104, 475, , "Bpacks", 150, 460, sleepTime)
+            Delay(8)
+            adbSwipe("135 400 135 200 200")
+            Delay(8)
+
+            if (openPack == "DeluxeMega" || openPack == "TeamRocketsAmbition" || openPack == "RulersOfTheSkies" || openPack == "EverydayWonders") {
+                ; No swipe, top row
+                if (openPack == "DeluxeMega"){
+                    packy := SelectExpansionFirstRowY
+                    packx := SelectExpansionLeftCollumnMiddleX
+                } else if (openPack == "TeamRocketsAmbition") {
+                    packy := SelectExpansionFirstRowY
+                    packx := SelectExpansionRightCollumnMiddleX
+                } else if (openPack == "RulersOfTheSkies") {
                     packy := SelectExpansionSecondRowY
                     packx := SelectExpansionLeftCollumnMiddleX
-                } else if (openPack == "MegaGyarados") {
-                    packy := SelectExpansionSecondRowY
-                    packx := SelectExpansionRightCollumnMiddleX + 3PackExpansionLeft
-                } else if (openPack == "MegaBlaziken") {
+                } else if (openPack == "EverydayWonders") {
                     packy := SelectExpansionSecondRowY
                     packx := SelectExpansionRightCollumnMiddleX
-                } else if (openPack == "MegaAltaria") {
-                    packy := SelectExpansionRightRowY
+                }
+            } else if(openPack == "MegaGardevoir" || openPack == "MegaCharizardY" || openPack == "MegaGyarados" || openPack == "MegaBlaziken" || openPack == "MegaAltaria"){
+                loop {
+                    adbSwipe("135 500 135 30 500")
+                    Delay(3)
+                    adbSwipe("135 500 135 30 500")
+                    if(FindOrLoseImage(196, 381, 208, 396, , "selectpackempty", 0))
+                        break
+                    Delay(5)
+                }
+                Delay(5)
+                if (openPack = "MegaGardevoir") {
+                    packy := SelectExpansionFirstRowY
+                    packx := SelectExpansionLeftCollumnMiddleX
+                } else if (openPack = "MegaCharizardY") {
+                    packy := SelectExpansionFirstRowY
+                    packx := SelectExpansionRightCollumnMiddleX
+                } else if (openPack = "MegaGyarados") {
+                    packy := SelectExpansionSecondRowY
+                    packx := SelectExpansionLeftCollumnMiddleX + 3PackExpansionLeft
+                } else if (openPack = "MegaBlaziken") {
+                    packy := SelectExpansionSecondRowY
+                    packx := SelectExpansionLeftCollumnMiddleX
+                } else if (openPack = "MegaAltaria") {
+                    packy := SelectExpansionSecondRowY
                     packx := SelectExpansionLeftCollumnMiddleX + 3PackExpansionRight
+                }
+            } else if (openPack = "MegaShine" || openPack = "Paldean"){
+                loop {
+                    adbSwipe("135 500 135 30 500")
+                    Delay(3)
+                    adbSwipe("135 500 135 30 500")
+                    if(FindOrLoseImage(196, 381, 208, 396, , "selectpackempty", 0))
+                        break
+                    Delay(5)
+                }
+                Delay(8)
+                adbSwipe("135 300 135 450 2000")
+                Delay(5)
+                ninemodPackPosY := 0
+                if(!slowMotion){
+                    adbSwipe("135 360 135 450 2000")
+                }
+                if (openPack = "MegaShine") {
+                    packy := SelectExpansionFirstRowY - 20
+                    packx := SelectExpansionLeftCollumnMiddleX
+                } else if (openPack = "Paldean") {
+                    packy := SelectExpansionFirstRowY - 20 
+                    packx := SelectExpansionRightCollumnMiddleX
+                }
+            } else {
+                adbSwipe("135 400 135 175 2000")
+                Delay(5)
+                if(!slowMotion){
+                    adbSwipe("135 400 135 350 2000")
+                    Delay(5)
+                }
+                if (openPack = "ParadoxDrive") {
+                    packy := SelectExpansionSecondRowY - 12
+                    packx := SelectExpansionLeftCollumnMiddleX
+                }  else if (openPack = "PulsingAura") {
+                    packy := SelectExpansionSecondRowY - 12 
+                    packx := SelectExpansionRightCollumnMiddleX
                 }
             }
         }
 
         else {
-            FindImageAndClick(250, 405, 267, 421, , "Apacks", 164, 465, sleepTime)
+            FindImageAndClick(240, 440, 270, 472, , "Apacks", 240, 460, sleepTime)
             Delay(8)
             adbSwipe("135 400 135 200 200")
             Delay(8)
 
-            if (openPack == "Suicune" || openPack == "HoOh" || openPack == "Lugia" || openPack == "Eevee" || openPack == "Deluxe") {
-            ; No swipe, top row
-            if (openPack == "Deluxe"){
-                packy := SelectExpansionSecondRowY
-                packx := SelectExpansionRightCollumnMiddle
-		        openPack == "eevee"
-            } else if (openPack == "Suicune") {
-                packy := SelectExpansionFirstRowY
-                packx := SelectExpansionRightCollumnMiddleX
-            } else if (openPack == "HoOh") {
-                packy := SelectExpansionSecondRowY
-                packx := SelectExpansionLeftCollumnMiddleX + 2PackExpansionLeft
-            } else if (openPack == "Lugia") {
-                packy := SelectExpansionSecondRowY
-                packx := SelectExpansionLeftCollumnMiddleX + 2PackExpansionRight
-            } else if (openPack == "Eevee") {
-                packy := SelectExpansionSecondRowY
-                packx := SelectExpansionRightCollumnMiddleX
-            } 
-
+            if (openPack == "Deluxe" || openPack == "Suicune" || openPack == "HoOh" || openPack == "Lugia" || openPack == "Eevee") {
+                ; No swipe, top row
+                if (openPack == "Deluxe"){
+                    packy := SelectExpansionFirstRowY
+                    packx := SelectExpansionLeftCollumnMiddleX
+                } else if (openPack == "Suicune") {
+                    packy := SelectExpansionFirstRowY
+                    packx := SelectExpansionRightCollumnMiddleX
+                } else if (openPack == "HoOh") {
+                    packy := SelectExpansionSecondRowY
+                    packx := SelectExpansionLeftCollumnMiddleX + 2PackExpansionLeft
+                } else if (openPack == "Lugia") {
+                    packy := SelectExpansionSecondRowY
+                    packx := SelectExpansionLeftCollumnMiddleX + 2PackExpansionRight
+                } else if (openPack == "Eevee") {
+                    packy := SelectExpansionSecondRowY
+                    packx := SelectExpansionRightCollumnMiddleX
+                }
             } else if(openPack == "Dialga" || openPack == "Palkia" || openPack == "Mew" || openPack = "Charizard" || openPack == "Mewtwo" || openPack == "Pikachu" ){
                 loop {
                     adbSwipe("135 500 135 30 500")
@@ -4394,7 +4487,6 @@ SelectPack(HG := false) {
                     packy := SelectExpansionSecondRowY
                     packx := SelectExpansionLeftCollumnMiddleX + 3PackExpansionRight
                 }
-
             } else if (openPack = "Shining" || openPack = "Arceus" ){
                 loop {
                     adbSwipe("135 500 135 30 500")
@@ -4437,8 +4529,6 @@ SelectPack(HG := false) {
                 }
             }
         }
-
-        
 
         FindImageAndClick(233, 400, 264, 428, , "Points", packx, packy, , 200)
         IniWrite, %openPack%, %A_ScriptDir%\%scriptName%.ini, UserSettings, Pack
@@ -4491,7 +4581,7 @@ SelectPack(HG := false) {
             break
         } else if(FindOrLoseImage(92, 299, 115, 317, , "notenoughitems", 0)) {
             cantOpenMorePacks := 1
-        } else if(FindOrLoseImage(225, 273, 235, 290, , "Pack", 0))
+        } else if(FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 0))
             break
         if(cantOpenMorePacks)
             return
@@ -4502,16 +4592,20 @@ SelectPack(HG := false) {
         CreateStatusMessage("Waiting for Skip2`n(" . failSafeTime . "/45 seconds)")
     }
 }
-PackOpening() {
+PackOpening(SpecialPack := false) {
     failSafe := A_TickCount
     failSafeTime := 0
     Loop {
         adbClick_wbb(146, 439)
         ;stuck here if not enough items for the second pack
         Delay(1)
-        if(FindOrLoseImage(225, 273, 235, 290, , "Pack", 0, failSafeTime)) {
+        if(FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 0, failSafeTime)) {
             break ;wait for pack to be ready to Trace and click skip
         } else if(FindOrLoseImage(92, 299, 115, 317, , "notenoughitems", 0)) {
+            cantOpenMorePacks := 1
+        } else if(FindOrLoseImage(85, 290, 125, 325, , "notenoughitems2", 0)) {
+            cantOpenMorePacks := 1
+        } else if(FindOrLoseImage(85, 290, 125, 325, , "notenoughitems3", 0)) {
             cantOpenMorePacks := 1
         } else {
             adbClick_wbb(239, 497)
@@ -4538,7 +4632,7 @@ PackOpening() {
     Loop {
         adbSwipe_wbb(adbSwipeParams)
         Sleep, 10
-        if (FindOrLoseImage(225, 273, 235, 290, , "Pack", 1, failSafeTime)){
+        if (FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 1, failSafeTime)){
             ;FindImageAndClick(38, 290, 65, 302, , "Platin", 18, 109, 2000) ; click mod settings
             Sleep, 20
             adbSwipe_wbb(adbSwipeParams)
@@ -4559,7 +4653,19 @@ PackOpening() {
 
     FindImageAndClick(0, 98, 116, 125, 5, "Opening", 239, 497) ;skip through cards until results opening screen
 
-    CheckPack()
+    if (!SpecialPack) {
+        Delay(1)
+        BonusDeluxeCheck := 0
+        loop 5 {
+            if(FindOrLoseImage(232, 228, 242, 244, , "BonusPackDeluxe", 0, failSafeTime))
+                BonusDeluxeCheck += 1
+            Delay(1)
+        }
+        if(BonusDeluxeCheck = 5) {
+            openPack := "Deluxe"
+        }
+        CheckPack()
+    }
 
     if(!friendIDs && friendID = "" && accountOpenPacks >= maxAccountPackNum)
         return
@@ -4628,7 +4734,11 @@ HourglassOpening(HG := false, NEIRestart := true) {
                 break
             }else if(FindOrLoseImage(92, 299, 115, 317, , "notenoughitems", 0)) {
                 cantOpenMorePacks := 1
-            }
+            }else if(FindOrLoseImage(85, 290, 125, 325, , "notenoughitems2", 0)) {
+                cantOpenMorePacks := 1
+            }else if(FindOrLoseImage(85, 290, 125, 325, , "notenoughitems3", 0)) {
+                cantOpenMorePacks := 1
+            } 
             if(cantOpenMorePacks)
                 return
             adbClick_wbb(146, 439)
@@ -4639,7 +4749,9 @@ HourglassOpening(HG := false, NEIRestart := true) {
         ; GoToMain()
         ; SelectPack("HGPack")
         
-        sleep, %DelayOfExtraPack%
+        ; ===== 第3包固定等待 1 秒再按 OK（取代會自動縮短的 DelayOfExtraPack） =====
+        sleep, 1000
+        ;sleep, %DelayOfExtraPack% 原本程式等待時間
         LogToFile("Delay of extra pack : " DelayOfExtraPack)
         DelayOfExtraPack -= 70
         IniWrite, %DelayOfExtraPack%, %A_ScriptDir%\..\Settings.ini, UserSettings, DelayOfExtraPack%scriptName%
@@ -4660,7 +4772,7 @@ HourglassOpening(HG := false, NEIRestart := true) {
     Loop {
         adbClick_wbb(146, 439)
         Delay(1)
-        if(FindOrLoseImage(225, 273, 235, 290, , "Pack", 0, failSafeTime))
+        if(FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 0, failSafeTime))
             break ;wait for pack to be ready to Trace and click skip
         else
             adbClick_wbb(239, 497)
@@ -4681,8 +4793,9 @@ HourglassOpening(HG := false, NEIRestart := true) {
         }
         failSafeTime := (A_TickCount - failSafe) // 1000
         CreateStatusMessage("Waiting for Pack`n(" . failSafeTime . "/45 seconds)")
-        if(failSafeTime > 45)
+        if(failSafeTime > 45){
             restartGameInstance("Stuck at Pack")
+        }
     }
 
     if(setSpeed > 1) {
@@ -4696,7 +4809,7 @@ HourglassOpening(HG := false, NEIRestart := true) {
     Loop {
         adbSwipe_wbb(adbSwipeParams)
         Sleep, 10
-        if (FindOrLoseImage(225, 273, 235, 290, , "Pack", 1, failSafeTime)){
+        if (FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 1, failSafeTime)){
             if(setSpeed > 1) {
                 ;FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
                 if(setSpeed = 3)
@@ -4714,6 +4827,17 @@ HourglassOpening(HG := false, NEIRestart := true) {
     }
 
     FindImageAndClick(0, 98, 116, 125, 5, "Opening", 239, 497) ;skip through cards until results opening screen
+
+    Delay(1)
+    BonusDeluxeCheck := 0
+    loop 5 {
+        if(FindOrLoseImage(232, 228, 242, 244, , "BonusPackDeluxe", 0, failSafeTime))
+            BonusDeluxeCheck += 1
+        Delay(1)
+    }
+    if(BonusDeluxeCheck = 5) {
+        openPack := "Deluxe"
+    }
 
     CheckPack()
 
@@ -4996,16 +5120,16 @@ CreateAccountList(instance) {
     if (deleteMethod = "Inject") {
         parseInjectType := "Inject"
         minPacks := 0
-        maxPacks := 38
+        maxPacks := 95
     }
     else if (deleteMethod = "Inject Missions") {
         parseInjectType := "Inject Missions"
         minPacks := 0
-        maxPacks := 38
+        maxPacks := 12
     }
     else if (deleteMethod = "Inject for Reroll") {
         parseInjectType := "Inject for Reroll"
-        minPacks := 35
+        minPacks := 13
         maxPacks := 9999
     }
 
@@ -5510,7 +5634,7 @@ GetEventRewards(frommain := true){
         Delay(2)
         adbClick_wbb(172, 427) ;clicks complete all and ok
         Delay(2)
-        adbClick_wbb(152, 464) ;when to many rewards ok button goes lower
+        adbClick_wbb(172, 438) ;when to many rewards ok button goes lower
         if FindOrLoseImage(244, 406, 273, 449, , "GotAllMissions", 0, 0) {
             break
         }
@@ -6466,7 +6590,7 @@ ClaimMailScript() {
                 adbClick_wbb(217, 170)
                 ;stuck here if not enough items for the second pack
                 Delay(1)
-                if(FindOrLoseImage(225, 273, 235, 290, , "Pack", 0, failSafeTime)) {
+                if(FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 0, failSafeTime)) {
                     break ;wait for pack to be ready to Trace and click skip
                 } else if(FindOrLoseImage(92, 299, 115, 317, , "notenoughitems", 0)) {
                     cantOpenMorePacks := 1
@@ -6494,7 +6618,7 @@ OpenPack:
             Loop {
                 adbSwipe_wbb(adbSwipeParams)
                 Sleep, 10
-                if (FindOrLoseImage(225, 273, 235, 290, , "Pack", 1, failSafeTime)){
+                if (FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 1, failSafeTime)){
                     ;FindImageAndClick(38, 290, 65, 302, , "Platin", 18, 109, 2000) ; click mod settings
                     if(setSpeed > 1) {
                         if(setSpeed = 3)
@@ -6512,19 +6636,20 @@ OpenPack:
 
             FindImageAndClick(0, 98, 116, 125, 5, "Opening", 239, 497) ;skip through cards until results opening screen
 
-            Delay(5)
+            Delay(1)
             BonusDeluxeCheck := 0
             loop 5 {
                 if(FindOrLoseImage(232, 228, 242, 244, , "BonusPackDeluxe", 0, failSafeTime))
                     BonusDeluxeCheck += 1
-                Delay(2)
+                Delay(1)
             }
             if(BonusDeluxeCheck = 5)
                 openPack := "Deluxe"
             else
                 openPack := "BonusPack"
 
-            CheckPack(true)
+; Opening multiple bonus packs at once will prevent CheckPack() from working because the card positions have changed.
+            ;CheckPack(true)
 
             ;FindImageAndClick(233, 486, 272, 519, , "Skip", 146, 494) ;click on next until skip button appears
 
@@ -6542,7 +6667,7 @@ OpenPack:
                     break
                 } else if(FindOrLoseImage(242, 404, 275, 451, 40, "GotAllMissions", 0, failSafeTime)) {
                     break
-                } else if(FindOrLoseImage(225, 273, 235, 290, , "Pack", 0, failSafeTime)) {
+                } else if(FindOrLoseImage(215, 265, 245, 300, 60, "Pack", 0, failSafeTime)) {
                     goto, openPack
                 } else {
                     adbClick_wbb(163, 495) ;146, 494
