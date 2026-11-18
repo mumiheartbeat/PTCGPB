@@ -5,7 +5,7 @@
 
 global githubUser := "mumiheartbeat"
 global repoName := "PTCGPB"
-global localVersion := "8.0.0(C)" 
+global localVersion := "8.0.1(C)" 
 global jsonFileName := ""
 
 global scaleParam
