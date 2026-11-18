@@ -244,7 +244,7 @@ Loop {
                     Sleep, %Delay%
                     adbClick(210, 210)
                 }
-            } else if(FindOrLoseImage(110, 275, 182, 302, 40, "Welcome", 0, failSafeTime)) {
+            } else if(FindOrLoseImage(110, 275, 182, 302, 60, "Welcome", 0, failSafeTime)) {
                 adbClick(143, 493)
             }
             if (GPTest || AutoSolo)

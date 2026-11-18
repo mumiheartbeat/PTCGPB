@@ -39,6 +39,7 @@ global maxWaitHours := 24             ; Maximum hours to wait before giving up (
 global DelayOfExtraPack
 global startOfRun, startOfAdding, endOfAdding, startOfRemoving, endOfRemoving, timeTotal := 0, timeOccupied := 0, occupancy, packsTotal := 0
 global titleHeight, MuMuv5, folderPath
+global clientLanguage
 
 avgtotalSeconds := 0
 
@@ -107,6 +108,7 @@ IniRead, CrownCheck, %A_ScriptDir%\..\Settings.ini, UserSettings, CrownCheck, 0
 IniRead, ImmersiveCheck, %A_ScriptDir%\..\Settings.ini, UserSettings, ImmersiveCheck, 0
 IniRead, InvalidCheck, %A_ScriptDir%\..\Settings.ini, UserSettings, InvalidCheck, 0
 IniRead, PseudoGodPack, %A_ScriptDir%\..\Settings.ini, UserSettings, PseudoGodPack, 0
+IniRead, clientLanguage, %A_ScriptDir%\..\Settings.ini, UserSettings, clientLanguage, en
 IniRead, minStars, %A_ScriptDir%\..\Settings.ini, UserSettings, minStars, 0
 IniRead, minStarsShiny, %A_ScriptDir%\..\Settings.ini, UserSettings, minStarsShiny, 0
 IniRead, twoPlusOne, %A_ScriptDir%\..\Settings.ini, UserSettings, twoPlusOne, 0
@@ -353,7 +355,6 @@ global adbSwipeParams := adbSwipeX1 . " " . adbSwipeY . " " . adbSwipeX2 . " " .
 Loop {
     try{
 
-        
         if(DeadCheck = 1 && deleteMethod != "13 Pack") {
             CreateStatusMessage("Account is stuck! Restarting and unfriending...")
             friended := true
@@ -715,9 +716,11 @@ Loop {
             if (ChangeLNMode) 
                 changeLNscript()
             
-            if(deleteMethod = "5 Pack" || deleteMethod = "5 Pack (Fast)" || deleteMethod = "13 Pack")
+            if(deleteMethod = "5 Pack" || deleteMethod = "5 Pack (Fast)" || deleteMethod = "13 Pack") {
+                ; 1.7.0 forces restart onto Welcome; tap before GoToMain ESC
+                GoToMain()
                 wonderPicked := DoWonderPick()
-
+            }
             wonderPickEvent()
             friendsAdded := AddFriends()
 
@@ -1086,7 +1089,7 @@ HomeAndMission(homeonly := 0, completeSecondMisson=false) {
         }
         if(!homeonly){
             FindImageAndClick(191, 393, 211, 411, , "Shop", 142, 488, 500)
-            FindImageAndClick(180, 498, 190, 508, , "Mission_dino1", 261, 478, 1000)
+            FindImageAndClick(175, 490, 198, 515, , "Missions2", 261, 478, 1000)
 
             wonderpicked := 0
             failSafe := A_TickCount
@@ -1096,25 +1099,30 @@ HomeAndMission(homeonly := 0, completeSecondMisson=false) {
                 ; ADD LEVEL UP CHECK HERE
                 LevelUp()
 
-                if (completeSecondMisson){
-                    adbClick_wbb(150, 390)
+                Loop {
+                    if (completeSecondMisson){
+                        adbClick_wbb(150, 390)
+                    }
+                    else {
+                        adbClick_wbb(150, 286)
+                    }
+                    Delay(1)
+                    if(FindOrLoseImage(175, 490, 198, 515, , "Missions2", 1, failSafeTime)){
+                        break
+                    }
                 }
-                else {
-                    adbClick_wbb(150, 286)
-                }
-                Delay(1)
 
-                if(FindOrLoseImage(136, 158, 156, 190, , "Mission_dino2", 0, failSafeTime))
+                if(FindOrLoseImage(130, 110, 150, 180, , "Mission_dino2", 0, failSafeTime) || FindOrLoseImage(52, 109, 69, 171, , "Mission_dino3", 0, failSafeTime))
                     break
 
-                if(FindOrLoseImage(108, 180, 177, 208, , "1solobattlemission", 0, failSafeTime)) {
+                if(FindOrLoseImage(100, 135, 180, 200, , "1solobattlemission", 0, failSafeTime)) {
                     beginnerMissionsDone := 1
                     if(injectMethod && loadedAccount)
                         setMetaData()
                     return
                 }
 
-                if (FindOrLoseImage(150, 159, 176, 206, , "missionwonder", 0, failSafeTime)){
+                if (FindOrLoseImage(120, 160, 150, 195, , "FirstMission", 0, failSafeTime)){
                     adbClick_wbb(141, 396) ; click try it and go to wonderpick page
                     DoWonderPickOnly()
                     wonderpicked := 1
@@ -1136,15 +1144,15 @@ HomeAndMission(homeonly := 0, completeSecondMisson=false) {
         ; ADD LEVEL UP CHECK HERE TOO
         LevelUp()
 
-        adbClick_wbb(139, 424) ;clicks complete mission
+        adbClick_wbb(139, 432) ;clicks complete mission
         Delay(1)
-        clickButton := FindOrLoseImage(145, 447, 258, 480, 80, "Button", 0, failSafeTime)
+        clickButton := FindOrLoseImage(95, 350, 195, 530, 80, "Button", 0, failSafeTime)
         if(clickButton) {
             adbClick_wbb(110, 369)
         }
         else if(FindOrLoseImage(191, 393, 211, 411, , "Shop", 1, failSafeTime)) {
-            adbInputEvent("111") ;send ESC
-            sleep, 1500
+            GoToMain()
+            break
         }
         else
             break
@@ -1318,7 +1326,7 @@ RemoveFriends() {
 }
 
 TradeTutorial() {
-    if(FindOrLoseImage(100, 120, 175, 145, , "Trade", 0)) {
+    if(FindOrLoseImage(100, 120, 175, 145, 40, "Trade", 0)) {
         Loop{
             adbClick_wbb(167,437)
             Delay(1)
@@ -1702,9 +1710,13 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
         pNeedle := GetNeedle(Path)
         vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 110, 180, 165, 200, 60)
         if (vRet = 1) {
-            adbClick_wbb(200, 380)
-            Sleep, 1000
-            PackOpening(true)
+            if(deleteMethod = "13 Pack") {
+                adbClick_wbb(75, 380) ; click cancel
+            } else {
+                adbClick_wbb(200, 380) ; click OK
+                Sleep, 1000
+                PackOpening(true)
+            }
         }
     }
 
@@ -1930,7 +1942,7 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
         if(imageName = "Mission_dino2") {
             Path = %imagePath%1solobattlemission.png
             pNeedle := GetNeedle(Path)
-            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 108, 171, 177, 208, 0)
+            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 100, 135, 180, 200, 0)
             if(vRet = 1) {
                 beginnerMissionsDone := 1
                 if(injectMethod && loadedAccount)
@@ -1942,11 +1954,11 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
 		}
 
         if(imageName = "WonderPick") {
-            Path = %imagePath%Update.png
+            Path = %imagePath%noticex.png
             pNeedle := GetNeedle(Path)
-            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 20, 191, 36, 211, searchVariation)
+            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 133, 479, 147, 493, searchVariation)
             if (vRet = 1) {
-                CreateStatusMessage("Update popup found! Clicking to dismiss...")
+                CreateStatusMessage("noticex popup found! Clicking to dismiss...")
                 adbClick_wbb(137, 485)
                 Sleep, 1000
             }
@@ -2001,7 +2013,7 @@ LevelUp() {
     }
     Delay(1)
     if(FindOrLoseImage(133, 479, 147, 493, , "noticex", 0)){
-        Delay(3)
+        Delay(2)
         adbClick_wbb(137, 485)
         Delay(1)
     }
@@ -3780,6 +3792,17 @@ DoTutorial() {
     Delay(1)
     adbClick_wbb(80, 400)
     Delay(1)
+
+    isYearInFront := (clientLanguage = "jp" || clientLanguage = "ko" || clientLanguage = "cn")
+    if (isYearInFront) {
+        ; JP/KR display the month picker in the opposite order.
+        Random, monthScrollCount, 2, 3
+        Loop, %monthScrollCount% {
+            adbSwipe_wbb("100 707 100 903 150")
+            Delay(3)
+        }
+    }
+
     adbClick_wbb(80, 375)
     Delay(1)
     failSafe := A_TickCount
@@ -3788,7 +3811,7 @@ DoTutorial() {
     Loop
     {
         Delay(1)
-        if(FindImageAndClick(100, 386, 138, 416, , "Month", , , , 1, failSafeTime))
+        if(FindImageAndClick(100, 386, 138, 416, , "Year", , , , 1, failSafeTime))
             break
         Delay(1)
         adbClick_wbb(142, 159)
@@ -3799,11 +3822,21 @@ DoTutorial() {
         Delay(1)
         adbClick_wbb(82, 422)
         failSafeTime := (A_TickCount - failSafe) // 1000
-        CreateStatusMessage("Waiting for Month`n(" . failSafeTime . "/45 seconds)")
+        CreateStatusMessage("Waiting for Year`n(" . failSafeTime . "/45 seconds)")
     } ;select month and year and click
 
     adbClick_wbb(200, 400)
     Delay(1)
+
+    if (!isYearInFront) {
+        ; Other languages display the year picker in the opposite order.
+        Random, yearScrollCount, 2, 3
+        Loop, %yearScrollCount% {
+            adbSwipe_wbb("389 707 389 903 150")
+            Delay(3)
+        }
+    }
+
     adbClick_wbb(200, 375)
     Delay(1)
     failSafe := A_TickCount
@@ -3811,7 +3844,7 @@ DoTutorial() {
     Loop ;select month and year and click
     {
         Delay(1)
-        if(FindImageAndClick(148, 384, 256, 419, , "Year", , , , 1, failSafeTime))
+        if(FindImageAndClick(148, 384, 256, 419, , "Month", , , , 1, failSafeTime))
             break
         Delay(1)
         adbClick_wbb(142, 159)
@@ -3825,7 +3858,7 @@ DoTutorial() {
         adbClick_wbb(142, 159)
         Delay(1)
         failSafeTime := (A_TickCount - failSafe) // 1000
-        CreateStatusMessage("Waiting for Year`n(" . failSafeTime . "/45 seconds)")
+        CreateStatusMessage("Waiting for Month`n(" . failSafeTime . "/45 seconds)")
     } ;select month and year and click
 
     Delay(1)
@@ -3918,7 +3951,7 @@ DoTutorial() {
         failSafeTime := (A_TickCount - failSafe) // 1000
     }
 
-    if(setSpeed = 3) {
+    if(setSpeed > 1) {
         FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
         FindImageAndClick(ModSets.oneX1, ModSets.oneY1, ModSets.oneX2, ModSets.oneY2, , ModSets.oneName, ModSets.oneCX, ModSets.oneCY) ; click mod settings
         Delay(1)
@@ -3928,13 +3961,16 @@ DoTutorial() {
 
     FindImageAndClick(110, 230, 182, 257, , "Welcome", 253, 506, 110) ;click through cutscene until welcome page
 
-    if(setSpeed = 3) {
+    if(setSpeed > 1) {
         FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
-        FindImageAndClick(ModSets.oneX1, ModSets.oneY1, ModSets.oneX2, ModSets.oneY2, , ModSets.oneName, ModSets.oneCX, ModSets.oneCY) ; click mod settings
+        if(setSpeed = 3)
+            FindImageAndClick(ModSets.threeX1, ModSets.threeY1, ModSets.threeX2, ModSets.threeY2, , ModSets.threeName, ModSets.threeCX, ModSets.threeCY) ; click 3x
+        else
+            FindImageAndClick(ModSets.twoX1, ModSets.twoY1, ModSets.twoX2, ModSets.twoY2, , ModSets.twoName, ModSets.twoCX, ModSets.twoCY) ; click 2x
         Delay(1)
         adbClick_wbb(41, ModSets.adbY)
-
     }
+
     FindImageAndClick(190, 241, 225, 270, , "Name", 189, 438) ;wait for name input screen
     /* ; Picks Erika at creation - disabled
     Delay(1)
@@ -4027,6 +4063,7 @@ DoTutorial() {
     if(setSpeed > 1) {
         FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
         FindImageAndClick(ModSets.oneX1, ModSets.oneY1, ModSets.oneX2, ModSets.oneY2, , ModSets.oneName, ModSets.oneCX, ModSets.oneCY) ; click mod settings
+        adbClick_wbb(41, ModSets.adbY)
         Delay(1)
     }
     failSafe := A_TickCount
@@ -4036,6 +4073,7 @@ DoTutorial() {
         Sleep, 10
         if (FindOrLoseImage(120, 70, 150, 95, , "SwipeUp", 0, failSafeTime)){
             if(setSpeed > 1) {
+                FindImageAndClick(ModSets.menuX1, ModSets.menuY1, ModSets.menuX2, ModSets.menuY2, , ModSets.menuName, ModSets.menuCX, ModSets.menuCY, 2000) ; click mod settings
                 if(setSpeed = 3)
                     FindImageAndClick(ModSets.threeX1, ModSets.threeY1, ModSets.threeX2, ModSets.threeY2, , ModSets.threeName, ModSets.threeCX, ModSets.threeCY) ; click mod settings
                 else
@@ -4065,22 +4103,19 @@ DoTutorial() {
     FindImageAndClick(46, 368, 103, 411, , "Gray") ;wait for for missions to be clickable
 
     Delay(1)
-    adbClick_wbb(247, 472)
+    FindImageAndClick(175, 490, 198, 515, , "Missions2", 261, 478, 5000) ; click through missions until missions is open
 
-    FindImageAndClick(115, 97, 174, 150, , "Pokeball", 247, 472, 5000) ; click through missions until missions is open
-
-    Delay(1)
-    adbClick_wbb(141, 294)
-    Delay(1)
-    adbClick_wbb(141, 294)
-    Delay(1)
-    FindImageAndClick(124, 168, 162, 207, , "Register", 141, 294, 1000) ; wait for register screen
-    Delay(6)
-    adbClick_wbb(140, 500)
-
-    FindImageAndClick(115, 255, 176, 308, , "Mission") ; wait for mission complete screen
-
-    FindImageAndClick(46, 368, 103, 411, , "Gray", 143, 360) ;wait for for missions to be clickable
+    Loop {
+        Delay(1)
+        adbClick_wbb(90, 260)
+        Delay(1)
+        adbClick_wbb(140, 430)
+        Delay(1)
+        adbClick_wbb(143, 360)
+        if (FindOrLoseImage(46, 368, 103, 411, , "Gray", 0)){
+		    break
+        }
+    }
 
     FindImageAndClick(170, 160, 220, 200, , "Notifications", 145, 194) ;click on packs. stop at booster pack tutorial
 
@@ -4139,11 +4174,11 @@ DoTutorial() {
 
     FindImageAndClick(114, 430, 155, 441, , "Wonder3", 190, 437) ; click through tutorial
 
-    Delay(2)
+    Delay(1)
 
-    FindImageAndClick(155, 281, 192, 315, , "Wonder4", 202, 347, 500) ; confirm wonder pick selection
+    FindImageAndClick(155, 281, 192, 315, 60, "Wonder4", 202, 347, 500) ; confirm wonder pick selection
 
-    Delay(2)
+    Delay(1)
 
     adbClick_wbb(208, 461)
 
@@ -4197,6 +4232,9 @@ DoTutorial() {
     }
 
     FindImageAndClick(120, 316, 143, 335, , "Main", 192, 449) ;click until at main menu
+
+    ; 1.7.0 forces restart after WP onto Welcome before GoToMain
+    FindImageAndClick(110, 275, 182, 302, 60, "Welcome", 140, 370) ;click until at main menu
 
     return true
 }
@@ -5339,7 +5377,7 @@ DoWonderPickOnly() {
                 adbClick_wbb(pos1, pos2+45-titleHeight)
                 Delay(3)
             }
-            if(FindOrLoseImage(160, 330, 200, 370, , "Card", 0, failSafeTime))
+            if(FindOrLoseImage(160, 330, 200, 370, 40, "Card", 0, failSafeTime))
                 break
             else if(FindOrLoseImage(133, 479, 147, 493, , "noticex", 0)){
                 Delay(3)
@@ -5357,7 +5395,7 @@ DoWonderPickOnly() {
     failSafeTime := 0
     Loop {
         adbClick_wbb(183, 350) ; click card
-        if(FindOrLoseImage(160, 330, 200, 370, , "Card", 1, failSafeTime)) {
+        if(FindOrLoseImage(160, 330, 200, 370, 40, "Card", 1, failSafeTime)) {
             break
         }
         Delay(1)
@@ -5371,7 +5409,7 @@ DoWonderPickOnly() {
         adbClick_wbb(146, 494)
         if(FindOrLoseImage(233, 486, 272, 519, , "Skip", 0, failSafeTime) || FindOrLoseImage(240, 80, 265, 100, , "WonderPick", 0, failSafeTime))
             break
-        if(FindOrLoseImage(160, 330, 200, 370, , "Card", 0, failSafeTime)) {
+        if(FindOrLoseImage(160, 330, 200, 370, 40, "Card", 0, failSafeTime)) {
             adbClick_wbb(183, 350) ; click card
         }
         delay(1)
@@ -5402,7 +5440,7 @@ DoWonderPick() {
 
     FindImageAndClick(2, 85, 34, 120, , "Missions", 261, 478, 500)
     ;FindImageAndClick(130, 170, 170, 205, , "WPMission", 150, 286, 1000)
-    FindImageAndClick(120, 185, 150, 215, , "FirstMission", 150, 286, 1000)
+    FindImageAndClick(120, 160, 150, 195, , "FirstMission", 150, 286, 1000)
     failSafe := A_TickCount
     failSafeTime := 0
     Loop {
@@ -5659,15 +5697,19 @@ GetAllRewards(tomain := true, dailies := false) {
         }
         adbClick_wbb(261, 478)
     }
-    FindImageAndClick(244, 406, 273, 449, , "GotAllMissions", 172, 427, 500)
+
     failSafe := A_TickCount
     failSafeTime := 0
     GotRewards := true
     if(dailies){
-        if (FindOrLoseImage(37, 130, 64, 156, , "DailyMissions", 1)) ; not in daily page, beginner missions not completed
-            FindImageAndClick(37, 130, 64, 156, , "DailyMissions", 165, 465, 500)
+        if (FindOrLoseImage(37, 130, 64, 156, , "DailyMissions", 1)) { ; not in daily page, beginner missions not completed
+            adbClick_wbb(30, 508) ; go to Mission List page
+            delay(1)
+            FindImageAndClick(37, 130, 64, 156, , "DailyMissions", 240, 465, 500)
+        }
     }
-    FindImageAndClick(73, 151, 210, 173, , "CollectDailies", 172, 427, 500)
+    FindImageAndClick(244, 406, 273, 449, , "GotAllMissions", 172, 427, 500)
+    ;FindImageAndClick(73, 151, 210, 173, , "CollectDailies", 172, 427, 500)
     if (tomain) {
         GoToMain()
     }
@@ -5703,12 +5745,50 @@ GoToMain(fromSocial := false) {
     if(!fromSocial) {
         Delay(2)
         Loop {
-            Delay(3) ;increase this delay if you see "close app" on home page
-            if(FindOrLoseImage(191, 393, 211, 411, , "Shop", 0, failSafeTime)) {
+            ; 1.7.0: tutorials during GoToMain always force an app restart onto Welcome.
+            if(FindOrLoseImage(110, 275, 182, 302, 60, "Welcome", 0, failSafeTime)) {
+                adbClick(140, 450) ; Tap to Start
+                delay(2)
+                if(FindOrLoseImage(3, 380, 45, 410, , "CloseAlertWindow", 0, failSafeTime)) {
+                    adbClick_wbb(75, 365) ; Cancel
+			        delay(1)
+                }
+                adbClick_wbb(140, 450) ; Tap to Start
+                Delay(2)
+                failSafeTime := 0
+                CreateStatusMessage("Moving to Main`n(tap Welcome after restart)")
+                continue
+            }
+            if(FindOrLoseImage(3, 380, 45, 410, , "CloseAlertWindow", 0) && !FindOrLoseImage(20, 490, 50, 530, ,"FogHomeIcon", 0)) {
+                adbClick_wbb(75, 365) ; Cancel
+                Delay(1)
+                adbClick_wbb(140, 450) ; Tap to Start
+                Delay(2)
+                failSafeTime := 0
+                CreateStatusMessage("Moving to Main`n(cancel quit after restart)")
+                continue
+            }
+            if(FindOrLoseImage(3, 380, 45, 410, , "CloseAlertWindow", 0, failSafeTime) && FindOrLoseImage(20, 490, 50, 530, ,"FogHomeIcon", 0, failSafeTime)) {
+                Loop {
+                    adbInputEvent("111") ;send ESC
+                    Delay(3)
+				
+                    if(FindOrLoseImage(191, 393, 211, 411, , "Shop", 0, failSafeTime))
+                        break
+                }
                 break
             }
-            else
+            else {
                 adbInputEvent("111") ;send ESC
+                Delay(3)
+            }
+
+            if(FindOrLoseImage(133, 479, 147, 493, , "noticex", 0)){
+                Delay(2)
+                adbClick_wbb(137, 485)
+                Delay(1)
+            }
+
             failSafeTime := (A_TickCount - failSafe) // 1000
             CreateStatusMessage("Waiting for Shop`n(" . failSafeTime . "/45 seconds)")
         }
