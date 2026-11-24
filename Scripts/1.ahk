@@ -22,13 +22,14 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 global RESTART_LOOP_EXCEPTION := { message: "Restarting main loop" }
 global winTitle, changeDate, failSafe, openPack, Delay, failSafeTime, StartSkipTime, Columns, failSafe, scriptName, GPTest, StatusText, setSpeed, jsonFileName, pauseToggle, SelectedMonitorIndex, swipeSpeed, godPack, scaleParam, deleteMethod, packs, FriendID, friendIDs, Instances, username, friendCode, stopToggle, friended, runMain, Mains, showStatus, injectMethod, packMethod, loadDir, loadedAccount, nukeAccount, CheckShinyPackOnly, TrainerCheck, FullArtCheck, RainbowCheck, ShinyCheck, dateChange, foundGP, friendsAdded, PseudoGodPack, packArray, CrownCheck, ImmersiveCheck, InvalidCheck, slowMotion, screenShot, accountFile, invalid, starCount, keepAccount
 global twoPlusOne, twoPlusDia
-global Mewtwo, Charizard, Pikachu, Mew, Dialga, Palkia, Arceus, Shining, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Latest, Paldean, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulersOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu
+global Mewtwo, Charizard, Pikachu, Mew, Dialga, Palkia, Arceus, Shining, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Latest, PaldeanWonders, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulerOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu
 global shinyPacks, minStars, minStarsShiny
 global DeadCheck
 global s4tEnabled, s4tSilent, s4t3Dmnd, s4t4Dmnd, s4t1Star, s4tGholdengo, s4tFoil, s4tTrainer, s4tRainbow, s4tFullArt, s4tShiny, s4tDiscordWebhookURL, s4tDiscordUserId, s4tSendAccountXml
 global avgtotalSeconds
 global verboseLogging := false
 global showcaseEnabled
+global currentPackIs4Card := false
 global currentPackIs6Card := false
 global injectSortMethod := "ModifiedAsc"  ; Default sort method (oldest accounts first)
 global injectMinPacks := 0       ; Minimum pack count for injection (0 = no minimum)
@@ -119,12 +120,12 @@ IniRead, DualFusionPikachu, %A_ScriptDir%\..\Settings.ini, UserSettings, DualFus
 IniRead, DualFusionMegaMewtwoX, %A_ScriptDir%\..\Settings.ini, UserSettings, DualFusionMegaMewtwoX, 1
 IniRead, DeluxeMega, %A_ScriptDir%\..\Settings.ini, UserSettings, DeluxeMega, 0
 IniRead, TeamRocketsAmbition, %A_ScriptDir%\..\Settings.ini, UserSettings, TeamRocketsAmbition, 0
-IniRead, RulersOfTheSkies, %A_ScriptDir%\..\Settings.ini, UserSettings, RulersOfTheSkies, 0
+IniRead, RulerOfTheSkies, %A_ScriptDir%\..\Settings.ini, UserSettings, RulerOfTheSkies, 0
 IniRead, EverydayWonders, %A_ScriptDir%\..\Settings.ini, UserSettings, EverydayWonders, 0
 IniRead, ParadoxDrive, %A_ScriptDir%\..\Settings.ini, UserSettings, ParadoxDrive, 0
 IniRead, PulsingAura, %A_ScriptDir%\..\Settings.ini, UserSettings, PulsingAura, 0
 IniRead, MegaShine, %A_ScriptDir%\..\Settings.ini, UserSettings, MegaShine, 0
-IniRead, Paldean, %A_ScriptDir%\..\Settings.ini, UserSettings, Paldean, 0
+IniRead, PaldeanWonders, %A_ScriptDir%\..\Settings.ini, UserSettings, PaldeanWonders, 0
 IniRead, MegaGardevoir, %A_ScriptDir%\..\Settings.ini, UserSettings, MegaGardevoir, 0
 IniRead, MegaCharizardY, %A_ScriptDir%\..\Settings.ini, UserSettings, MegaCharizardY, 0
 IniRead, MegaBlaziken, %A_ScriptDir%\..\Settings.ini, UserSettings, MegaBlaziken, 0
@@ -204,7 +205,7 @@ IniRead, secondWebhook, %A_ScriptDir%\..\Settings.ini, UserSettings, secondWebho
 
 
 MuMuv5 := 1
-pokemonList := ["Mewtwo", "Charizard", "Pikachu", "Mew", "Dialga", "Palkia", "Arceus", "Shining", "Solgaleo", "Lunala", "Buzzwole", "Eevee", "HoOh", "Lugia", "Suicune", "Deluxe", "MegaBlaziken", "MegaGyarados", "MegaAltaria", "MegaCharizardY", "MegaGardevoir", "Latest", "Paldean", "MegaShine", "PulsingAura", "ParadoxDrive", "EverydayWonders", "RulersOfTheSkies", "TeamRocketsAmbition", "DeluxeMega", "DualFusionMegaMewtwoX", "DualFusionPikachu"]
+pokemonList := ["Mewtwo", "Charizard", "Pikachu", "Mew", "Dialga", "Palkia", "Arceus", "Shining", "Solgaleo", "Lunala", "Buzzwole", "Eevee", "HoOh", "Lugia", "Suicune", "Deluxe", "MegaBlaziken", "MegaGyarados", "MegaAltaria", "MegaCharizardY", "MegaGardevoir", "Latest", "PaldeanWonders", "MegaShine", "PulsingAura", "ParadoxDrive", "EverydayWonders", "RulerOfTheSkies", "TeamRocketsAmbition", "DeluxeMega", "DualFusionMegaMewtwoX", "DualFusionPikachu"]
 shinyPacks := {"Shining": 1, "Solgaleo": 1, "Lunala": 1, "Buzzwole": 1, "Eevee": 1, "HoOh": 1, "Lugia": 1, "Suicune": 1, "Deluxe": 1, "MegaBlaziken": 1, "MegaGyarados": 1, "MegaAltaria": 1}
 
 PlatinConfig := { "menuName": "Platin", "menuX1": 38, "menuY1": 145, "menuX2": 65, "menuY2": 170, "menuCX": 18, "menuCY": 109
@@ -817,14 +818,7 @@ Loop {
                 if(cantOpenMorePacks || (!friendIDs && friendID = "" && accountOpenPacks >= maxAccountPackNum))
                     Goto, EndOfRun
 
-                HomeAndMission()
-                if(beginnerMissionsDone)
-                    Goto, EndOfRun
-
-                SelectPack("HGPack")
-                if(cantOpenMorePacks)
-                    Goto, EndOfRun
-                PackOpening() ;10
+                HourglassOpening(true) ;10
                 if(cantOpenMorePacks || (!friendIDs && friendID = "" && accountOpenPacks >= maxAccountPackNum))
                     Goto, EndOfRun
 
@@ -850,15 +844,11 @@ Loop {
                         Goto, EndOfRun
                 }
 
-                HomeAndMission(1)
-                SelectPack("HGPack")
-                if(cantOpenMorePacks)
-                    Goto, EndOfRun
-                PackOpening() ;12
+                HourglassOpening(true) ;12
                 if(cantOpenMorePacks || (!friendIDs && friendID = "" && accountOpenPacks >= maxAccountPackNum))
                     Goto, EndOfRun
 
-                HomeAndMission(1)
+                GoToMain()
                 SelectPack("HGPack")
                 if(cantOpenMorePacks)
                     Goto, EndOfRun
@@ -1177,7 +1167,6 @@ RemoveFriends() {
         friended := false
         return false
     }
-    
 
     packsInPool := 0 ; if friends are removed, clear the pool
 
@@ -1550,7 +1539,7 @@ AddFriends(renew := false, getFC := false) {
         }
         else {
             Sleep, 2000
-            loop 5 {
+            loop 3 {
                 if(FindOrLoseImage(120, 178, 155, 210, , "Error", 0)){
                     adbClick_wbb(139, 371)
                     Delay(2)
@@ -1576,7 +1565,7 @@ AddFriends(renew := false, getFC := false) {
     ;}
     
     ;else {
-	    adbClick_wbb(143, 518)
+        adbClick_wbb(143, 518)
         Delay(1)
 	    FindImageAndClick(130, 297, 140, 312, , "SearchInfo", 78, 378, 1500)
         FindImageAndClick(120, 500, 155, 530, , "Social", 143, 518, 500)
@@ -1685,6 +1674,15 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
         restartGameInstance("*Stuck at " . imageName . "...")
     }
 
+    if(imageName = "Social" || imageName = "Country" || imageName = "Points") {
+        Path = %imagePath%Error_3Button.png ; look for Banned account
+        pNeedle := GetNeedle(Path)
+        vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 30, 310, 60, 460, searchVariation)
+        if (vRet = 1) {
+            procError_NoSaveData()
+        }
+    }
+/*
     if(!needToReturnSocial){
         Path = %imagePath%Error.png ; Search for communication error
         pNeedle := GetNeedle(Path)
@@ -1701,7 +1699,7 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
 
         }
     }
-
+*/
     ; ===== 每週特別包開包 =====
     static spLastCheck := 0
     if (imageName != "SpecialPack" && A_TickCount - spLastCheck > 700) {
@@ -1723,6 +1721,7 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
     if(imageName = "Social" || imageName = "Add" || imageName = "Add2") {
         TradeTutorial()
     }
+
     if(imageName = "Social" || imageName = "Country" || imageName = "Account2" || imageName = "Account" || imageName = "Points") { ;only look for deleted account on start up.
         Path = %imagePath%NoSave.png ; look for No Save Data error message > if loaded account > delete xml > reload
         pNeedle := GetNeedle(Path)
@@ -1742,6 +1741,7 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
             throw RESTART_LOOP_EXCEPTION
         }
     }
+
     if(imageName = "Points" || imageName = "Home" || imageName = "Shop" || imageName = "ShopInfo") { ;look for level up ok "button"
         LevelUp()
     }
@@ -1862,8 +1862,17 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
             restartGameInstance("*Stuck at " . imageName . "...")
         }
 
+        if(imageName = "Social" || imageName = "Country" || imageName = "Points") {
+            Path = %imagePath%Error_3Button.png ; look for Banned account
+            pNeedle := GetNeedle(Path)
+            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 30, 310, 60, 460, searchVariation)
+            if (vRet = 1) {
+                procError_NoSaveData()
+            }
+        }
+/*
         if(!needToReturnSocial){
-            Path = %imagePath%.png ; Search for communication error
+            Path = %imagePath%Error.png ; Search for communication error
             pNeedle := GetNeedle(Path)
             ; ImageSearch within the region
             vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 120, 178, 155, 210, searchVariation)
@@ -1877,7 +1886,7 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
                 Sleep, 1000
             }
         }
-
+*/
         Path = %imagePath%NoResponse.png
         pNeedle := GetNeedle(Path)
         ; ImageSearch within the region
@@ -1896,7 +1905,6 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
             adbClick_wbb(46, 299)
             Sleep, 1000
         }
-
 
         if(imageName = "Social" || imageName = "Country" || imageName = "Account2" || imageName = "Account") { ;only look for deleted account on start up.
             Path = %imagePath%NoSave.png ; look for No Save Data error message > if loaded account > delete xml > reload
@@ -1953,7 +1961,7 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
 			}
 		}
 
-        if(imageName = "WonderPick") {
+        if(imageName = "WonderPick" || imageName = "Missions") {
             Path = %imagePath%noticex.png
             pNeedle := GetNeedle(Path)
             vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 133, 479, 147, 493, searchVariation)
@@ -1972,8 +1980,6 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
                 adbClick_wbb(145, 451)
             }
         }
-
-        
 
         Gdip_DisposeImage(pBitmap)
         if(imageName = "Points" || imageName = "Home" || imageName = "Shop" || imageName = "ShopInfo") { ;look for level up ok "button"
@@ -2003,7 +2009,7 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
     return confirmed
 }
 
-
+; Checks if a level up notification is displayed and find the button and clicks through it.
 LevelUp() {
     Leveled := FindOrLoseImage(100, 86, 167, 116, , "LevelUp", 0)
     if(Leveled) {
@@ -2084,9 +2090,8 @@ restartGameInstance(reason, RL := true) {
     else
         CreateStatusMessage("Restarting game...",,,, false)
     LogToFile("Restarted game for instance " . scriptName . ". Reason: " reason, "Restart.txt")
-    
 
-    if (RL = "GodPack") {
+    if (RL = "GodPack" || RL = "Banned") {
         AppendToJsonFile(packsThisRun)
         DeadCheck := 0
         IniWrite, 0, %A_ScriptDir%\%scriptName%.ini, UserSettings, DeadCheck
@@ -2245,6 +2250,7 @@ menuDeleteStart() {
 
 CheckPack(bonusPack := false) {
     ; Update pack count.
+    currentPackIs4Card := false ; reset before each pack check
     currentPackIs6Card := false ; reset before each pack check
     if(!bonusPack) {
         accountOpenPacks += 1
@@ -2264,11 +2270,13 @@ CheckPack(bonusPack := false) {
             break
         Delay(1)
     }
-    currentPackIs6Card := DetectSixCardPack()
 
     ; Determine total cards in pack for 4-diamond s4t calculations
-    totalCardsInPack := currentPackIs6Card ? 6 : 5
-    totalCardsInPack := (openPack = "Deluxe") ? 4 : totalCardsInPack
+    currentPackIs4Card := DetectFourCardPack()
+    if (!currentPackIs4Card) {
+        currentPackIs6Card := DetectSixCardPack()
+    }
+    totalCardsInPack := currentPackIs6Card ? 6 : (currentPackIs4Card ? 4 : 5)
 
 ; Check for tradeable cards.
     if (s4tEnabled) {
@@ -2439,6 +2447,23 @@ CheckPack(bonusPack := false) {
     }
 }
 
+FoundRGB() {
+    accountFullPath := ""
+    accountFile := saveAccount("RGB", accountFullPath)
+    screenShot := Screenshot("RGB")
+
+    tempDir := A_ScriptDir . "\..\Screenshots\temp"
+    if !FileExist(tempDir)
+        FileCreateDir, %tempDir%
+
+    CreateStatusMessage("RGB found! Continuing...",,,, false)
+    logMessage := "RGB found in instance: " . scriptName . " File name: " . accountFile . " Backing up to the Accounts\\SpecificCards folder and continuing..."
+    LogToFile(StrReplace(logMessage, "\n", " "), "GPlog.txt")
+
+    discordMessage := "RGB found in instance: " . scriptName . "\nFile name: " . accountFile . "\nBacking up to the Accounts\\SpecificCards folder and continuing..."
+	LogToDiscord(discordMessage, screenShot, true, (sendAccountXml ? accountFullPath : ""))
+}
+
 FoundTradeable(foundCards) {
     packDetailsFile := ""
     packDetailsMessage := ""
@@ -2528,11 +2553,11 @@ FoundTradeable(foundCards) {
 DetectSixCardPack() {
     global winTitle
     searchVariation := 5 ; needed to tighten from 20 to avoid false positives
-    
+
     imagePath := A_ScriptDir . "\Scale125\"
-    
+
     pBitmap := from_window(WinExist(winTitle))
-    
+
     ; Look for 6cardpackindicator.png (background element visible only in 5-card packs)
     Path = %imagePath%6cardpackindicator.png
     if (FileExist(Path)) {
@@ -2544,10 +2569,35 @@ DetectSixCardPack() {
             return false  ; Return false = 5-card pack
         }
     }
-    
+
     ; Did not find check image, so this must be a 6-card pack
     Gdip_DisposeImage(pBitmap)
     return true  ; Return true = 6-card pack
+}
+
+DetectFourCardPack() {
+    global winTitle
+    searchVariation := 5 ; needed to tighten from 20 to avoid false positives
+
+    imagePath := A_ScriptDir . "\Scale125\"
+
+    pBitmap := from_window(WinExist(winTitle))
+
+    ; Look for 4cardpackindicator.png (background element visible only in 5-card packs)
+    Path = %imagePath%4cardpackindicator.png
+    if (FileExist(Path)) {
+        pNeedle := GetNeedle(Path)
+        vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 232, 228, 242, 244, searchVariation)
+        if (vRet = 1) {
+            ; Found the check image, so this is a 4-card pack
+            Gdip_DisposeImage(pBitmap)
+            return true  ; Return true = 4-card pack
+        }
+    }
+
+    ; Did not find check image, so this must be a 5-card pack
+    Gdip_DisposeImage(pBitmap)
+    return false  ; Return false = 5-card pack
 }
 
 FoundStars(star) {
@@ -2611,38 +2661,43 @@ FoundStars(star) {
     ;ChooseTag()
 }
 
-FindBorders(prefix) {
-    global currentPackIs6Card
+FindBorders(prefix, SpecialPack := false) {
     count := 0
     searchVariation := 40
     searchVariation6Card := 60 ; looser tolerance for 6-card positions while we test if top row needles can be re-used for bottom row in 6-card packs
-    
+
+    is4CardPack := currentPackIs4Card
     is6CardPack := currentPackIs6Card
-    if (InStr(prefix, "foil")) {
-        borderCoords := [[60, 198, 62, 233]
-            ,[145, 198, 147, 233]
-            ,[60, 313, 62, 348]]
-    } else if (openPack = "Deluxe") {
-        borderCoords := [[70, 284, 123, 286]
-            ,[155, 284, 208, 286]
-            ,[70, 399, 123, 401]
-            ,[155, 399, 208, 401]]
-    } else if (is6CardPack) {
-        borderCoords := [[30, 284, 83, 286]      ; Top row card 1
-            ,[113, 284, 166, 286]                ; Top row card 2  
-            ,[196, 284, 249, 286]                ; Top row card 3
-            ,[30, 399, 83, 401]                  ; Bottom row card 1
-            ,[113, 399, 166, 401]                ; Bottom row card 2
-            ,[196, 399, 249, 401]]               ; Bottom row card 3
+
+    if (SpecialPack) {
+        borderCoords := [[113, 342, 166, 344]]
     } else {
-        ; 5-card pack
-        borderCoords := [[30, 284, 83, 286]
-            ,[113, 284, 166, 286]
-            ,[196, 284, 249, 286]
-            ,[70, 399, 123, 401]
-            ,[155, 399, 208, 401]]
+        if (InStr(prefix, "foil")) {
+            borderCoords := [[60, 198, 62, 233]
+                ,[145, 198, 147, 233]
+                ,[60, 313, 62, 348]]
+        } else if (is4CardPack) {
+            borderCoords := [[70, 284, 123, 286]
+                ,[155, 284, 208, 286]
+                ,[70, 399, 123, 401]
+                ,[155, 399, 208, 401]]
+        } else if (is6CardPack) {
+            borderCoords := [[30, 284, 83, 286]      ; Top row card 1
+                ,[113, 284, 166, 286]                ; Top row card 2  
+                ,[196, 284, 249, 286]                ; Top row card 3
+                ,[30, 399, 83, 401]                  ; Bottom row card 1
+                ,[113, 399, 166, 401]                ; Bottom row card 2
+                ,[196, 399, 249, 401]]               ; Bottom row card 3
+        } else {
+            ; 5-card pack
+            borderCoords := [[30, 284, 83, 286]
+                ,[113, 284, 166, 286]
+                ,[196, 284, 249, 286]
+                ,[70, 399, 123, 401]
+                ,[155, 399, 208, 401]]
+        }
     }
-    
+
     pBitmap := from_window(WinExist(winTitle))
     for index, value in borderCoords {
         coords := borderCoords[A_Index]
@@ -2651,7 +2706,7 @@ FindBorders(prefix) {
             currentSearchVariation := 60
             matched := false
 
-            Loop, Files, % A_ScriptDir . "\Scale125\fullart*.png", F
+            Loop, Files, % A_ScriptDir . "\Scale125\%prefix%*.png", F
             {
                 Path := A_LoopFileFullPath
                 pNeedle := GetNeedle(Path)
@@ -2668,7 +2723,7 @@ FindBorders(prefix) {
             if (InStr(prefix, "foil")) {
                 imageName := prefix . A_Index
                 currentSearchVariation := 20
-            } else if (openPack = "Deluxe") {
+            } else if (is4CardPack) {
                 imageIndex := (A_Index >= 3) ? (A_Index + 1) : (A_Index + 3)
                 imageName := prefix . imageIndex
                 currentSearchVariation := searchVariation
@@ -2722,7 +2777,7 @@ FindCard(prefix) {
 }
 
 FindGodPack(invalidPack := false) {
-        ; Check for normal borders.
+    ; Check for normal borders.
     normalBorders := FindBorders("normal")
     if (normalBorders) {
         CreateStatusMessage("Not a God Pack...",,,, false)
@@ -2736,9 +2791,9 @@ FindGodPack(invalidPack := false) {
     if (!invalidPack && requiredStars > 0) {
         ;starCount := FindBorders("fullart") + FindBorders("rainbow") + FindBorders("trainer")
         mistakeCount := FindBorders("fullart") + FindBorders("rainbow") + FindBorders("trainer") + FindBorders("1star")
-        
+
         if(mistakeCount){
-            totalCardsInPack := (openPack == "Deluxe") ? 4 : 5
+            totalCardsInPack := currentPackIs4Card ? 4 : 5
             starCount := totalCardsinPack - FindBorders("1star")
         }
         else
@@ -2777,7 +2832,7 @@ GodPackFound(validity) {
     ; Calculate star count by only counting valid 2-star cards (fullart, rainbow, trainer)
     ; Don't subtract invalid cards, instead count only the valid ones
     ;starCount := FindBorders("fullart") + FindBorders("rainbow") + FindBorders("trainer")
-    totalCardsInPack := (openPack == "Deluxe") ? 4 : 5
+    totalCardsInPack := currentPackIs4Card ? 4 : 5
     starCount := totalCardsinPack - FindBorders("1star")
     
     screenShot := Screenshot(validity)
@@ -2816,7 +2871,6 @@ GodPackFound(validity) {
         FileDelete, %usernameScreenshotFile%
     }
 
-    
     CreateStatusMessage(Interjection . (invalid ? " " . invalid : "") . " God Pack found!",,,, false)
     logMessage := Interjection . "\n" . username . " (" . friendCode . ")\n[" . starCount . "/" . totalCardsInPack . "][" . packsInPool . "P][" . openPack . "] " . invalid . " God Pack found in instance: " . scriptName . "\nFile name: " . accountFile . "\nBacking up to the Accounts\\GodPacks folder and continuing..."
     LogToFile(StrReplace(logMessage, "\n", " "), "GPlog.txt")
@@ -3381,7 +3435,7 @@ Screenshot(fileType := "Valid", subDir := "", ByRef fileName := "") {
         pBitmap := Gdip_CloneBitmapArea(pBitmapW, 3, 50 , 270, 449)
         fileName := folderNO . "_" . userFriendCode . "_" . stardustValue . "_" . Date_MMDD . "_3.png"
     } else if (fileType = "FRIENDCODE"){
-        pBitmap := Gdip_CloneBitmapArea(pBitmapW, 85, 64, 130, 160)
+        pBitmap := Gdip_CloneBitmapArea(pBitmapW, 43, 64, 190, 160)
     } else {
         pBitmap := Gdip_CloneBitmapArea(pBitmapW, 18, 175+yBias, 240, 227)
     }
@@ -3940,9 +3994,9 @@ DoTutorial() {
                 }
                 failSafeTime := (A_TickCount - failSafe) // 1000
             }
-        } else if(FindOrLoseImage(110, 350, 150, 404, , "Confirm", 0, failSafeTime)) {
+        } else if(FindOrLoseImage(110, 340, 150, 410, , "Confirm", 0, failSafeTime)) { ; Download Alert Window
             adbClick_wbb(203, 364)
-        } else if(FindOrLoseImage(215, 371, 264, 418, , "Complete", 0, failSafeTime)) {
+        } else if(FindOrLoseImage(210, 360, 264, 420, , "Complete", 0, failSafeTime)) { ; Download Complete
             adbClick_wbb(140, 370)
         } else if(FindOrLoseImage(0, 46, 20, 70, , "Cinematic", 0, failSafeTime)) {
             break
@@ -4170,7 +4224,7 @@ DoTutorial() {
 
     FindImageAndClick(191, 393, 211, 411, , "Shop", 146, 444) ;click until at main menu
 
-    FindImageAndClick(87, 232, 131, 266, , "Wonder2", 79, 411) ; click until wonder pick tutorial screen
+    FindImageAndClick(87, 232, 131, 266, 40, "Wonder2", 79, 411) ; click until wonder pick tutorial screen
 
     FindImageAndClick(114, 430, 155, 441, , "Wonder3", 190, 437) ; click through tutorial
 
@@ -4385,13 +4439,13 @@ SelectPack(HG := false) {
             } 
 		}
 
-        else if(openPack == "MegaGyarados" || openPack == "MegaBlaziken" || openPack == "MegaAltaria" || openPack == "MegaCharizardY" || openPack == "MegaGardevoir" || openPack = "Paldean" || openPack = "MegaShine" || openPack = "PulsingAura" || openPack = "ParadoxDrive" || openPack == "EverydayWonders" || openPack == "RulersOfTheSkies" || openPack == "TeamRocketsAmbition" || openPack == "DeluxeMega") {
+        else if(openPack == "MegaGyarados" || openPack == "MegaBlaziken" || openPack == "MegaAltaria" || openPack == "MegaCharizardY" || openPack == "MegaGardevoir" || openPack = "PaldeanWonders" || openPack = "MegaShine" || openPack = "PulsingAura" || openPack = "ParadoxDrive" || openPack == "EverydayWonders" || openPack == "RulerOfTheSkies" || openPack == "TeamRocketsAmbition" || openPack == "DeluxeMega") {
             FindImageAndClick(88, 445, 104, 475, , "Bpacks", 150, 460, sleepTime)
             Delay(8)
             adbSwipe("135 400 135 200 200")
             Delay(8)
 
-            if (openPack == "DeluxeMega" || openPack == "TeamRocketsAmbition" || openPack == "RulersOfTheSkies" || openPack == "EverydayWonders") {
+            if (openPack == "DeluxeMega" || openPack == "TeamRocketsAmbition" || openPack == "RulerOfTheSkies" || openPack == "EverydayWonders") {
                 ; No swipe, top row
                 if (openPack == "DeluxeMega"){
                     packy := SelectExpansionFirstRowY
@@ -4399,7 +4453,7 @@ SelectPack(HG := false) {
                 } else if (openPack == "TeamRocketsAmbition") {
                     packy := SelectExpansionFirstRowY
                     packx := SelectExpansionRightCollumnMiddleX
-                } else if (openPack == "RulersOfTheSkies") {
+                } else if (openPack == "RulerOfTheSkies") {
                     packy := SelectExpansionSecondRowY
                     packx := SelectExpansionLeftCollumnMiddleX
                 } else if (openPack == "EverydayWonders") {
@@ -4432,7 +4486,7 @@ SelectPack(HG := false) {
                     packy := SelectExpansionSecondRowY
                     packx := SelectExpansionLeftCollumnMiddleX + 3PackExpansionRight
                 }
-            } else if (openPack = "MegaShine" || openPack = "Paldean"){
+            } else if (openPack = "MegaShine" || openPack = "PaldeanWonders"){
                 loop {
                     adbSwipe("135 500 135 30 500")
                     Delay(3)
@@ -4451,7 +4505,7 @@ SelectPack(HG := false) {
                 if (openPack = "MegaShine") {
                     packy := SelectExpansionFirstRowY - 20
                     packx := SelectExpansionLeftCollumnMiddleX
-                } else if (openPack = "Paldean") {
+                } else if (openPack = "PaldeanWonders") {
                     packy := SelectExpansionFirstRowY - 20 
                     packx := SelectExpansionRightCollumnMiddleX
                 }
@@ -4692,17 +4746,11 @@ PackOpening(SpecialPack := false) {
     FindImageAndClick(0, 98, 116, 125, 5, "Opening", 239, 497) ;skip through cards until results opening screen
 
     if (!SpecialPack) {
-        Delay(1)
-        BonusDeluxeCheck := 0
-        loop 5 {
-            if(FindOrLoseImage(232, 228, 242, 244, , "BonusPackDeluxe", 0, failSafeTime))
-                BonusDeluxeCheck += 1
-            Delay(1)
-        }
-        if(BonusDeluxeCheck = 5) {
-            openPack := "Deluxe"
-        }
         CheckPack()
+    } else {
+        if (FindBorders("1starSP", true) == 0) { ; Special Pack 1 star not found, then is RGB
+            FoundRGB()
+        }
     }
 
     if(!friendIDs && friendID = "" && accountOpenPacks >= maxAccountPackNum)
@@ -4865,17 +4913,6 @@ HourglassOpening(HG := false, NEIRestart := true) {
     }
 
     FindImageAndClick(0, 98, 116, 125, 5, "Opening", 239, 497) ;skip through cards until results opening screen
-
-    Delay(1)
-    BonusDeluxeCheck := 0
-    loop 5 {
-        if(FindOrLoseImage(232, 228, 242, 244, , "BonusPackDeluxe", 0, failSafeTime))
-            BonusDeluxeCheck += 1
-        Delay(1)
-    }
-    if(BonusDeluxeCheck = 5) {
-        openPack := "Deluxe"
-    }
 
     CheckPack()
 
@@ -5380,7 +5417,7 @@ DoWonderPickOnly() {
             if(FindOrLoseImage(160, 330, 200, 370, 40, "Card", 0, failSafeTime))
                 break
             else if(FindOrLoseImage(133, 479, 147, 493, , "noticex", 0)){
-                Delay(3)
+                Delay(2)
                 adbClick_wbb(137, 485)
             }
         }
@@ -5686,34 +5723,33 @@ GetEventRewards(frommain := true){
 }
 
 GetAllRewards(tomain := true, dailies := false) {
-    ;FindImageAndClick(2, 85, 34, 120, , "Missions", 261, 478, 500)
-    Sleep, 8000
     loop{
-        if(FindOrLoseImage(175, 490, 198, 515, , "Missions2", 0))
+        ; 等待任務頁面完全載入完成
+        if(FindOrLoseImage(175, 490, 198, 515, , "Missions2", 0) && FindOrLoseImage(110, 210, 165, 240, , "MissionDetail", 0))
             break
         else if(FindOrLoseImage(133, 479, 147, 493, , "noticex", 0)){
-            Delay(3)
+            Delay(2)
             adbClick_wbb(137, 485)
         }
         adbClick_wbb(261, 478)
     }
-
-    failSafe := A_TickCount
-    failSafeTime := 0
-    GotRewards := true
     if(dailies){
-        if (FindOrLoseImage(37, 130, 64, 156, , "DailyMissions", 1)) { ; not in daily page, beginner missions not completed
-            adbClick_wbb(30, 508) ; go to Mission List page
+        ; not in daily page, beginner missions not completed
+        if (FindOrLoseImage(37, 130, 64, 156, , "DailyMissions", 1)) {
+            FindImageAndClick(20, 485, 42, 515, , "MissionList", 20, 512, 500) ; go to Mission List page
             delay(1)
             FindImageAndClick(37, 130, 64, 156, , "DailyMissions", 240, 465, 500)
         }
     }
     FindImageAndClick(244, 406, 273, 449, , "GotAllMissions", 172, 427, 500)
     ;FindImageAndClick(73, 151, 210, 173, , "CollectDailies", 172, 427, 500)
+    GotRewards := true
+
     if (tomain) {
         GoToMain()
     }
 }
+
 redeemTokensScript() {
 	global redeemTokensDone
 	IniRead, redeemTokens, %A_ScriptDir%\..\Settings.ini, UserSettings, RedeemTokens, 0
@@ -5751,7 +5787,7 @@ GoToMain(fromSocial := false) {
                 delay(2)
                 if(FindOrLoseImage(3, 380, 45, 410, , "CloseAlertWindow", 0, failSafeTime)) {
                     adbClick_wbb(75, 365) ; Cancel
-			        delay(1)
+                    delay(1)
                 }
                 adbClick_wbb(140, 450) ; Tap to Start
                 Delay(2)
@@ -5772,7 +5808,6 @@ GoToMain(fromSocial := false) {
                 Loop {
                     adbInputEvent("111") ;send ESC
                     Delay(3)
-				
                     if(FindOrLoseImage(191, 393, 211, 411, , "Shop", 0, failSafeTime))
                         break
                 }
@@ -5795,7 +5830,9 @@ GoToMain(fromSocial := false) {
     }
     else {
         FindImageAndClick(120, 500, 155, 530, , "Social", 143, 518)
-        FindImageAndClick(191, 393, 211, 411, , "Shop", 20, 515, 500) ;click until at main menu
+        ; 先檢查home，再檢查shop，以避免重覆點擊進入主頁面多次
+        FindImageAndClick(20, 500, 55, 530, , "Home", 20, 515, 500)
+        FindImageAndClick(191, 393, 211, 411, , "Shop", 137, 485, 500)
     }
 }
 
@@ -6716,18 +6753,6 @@ OpenPack:
 
             FindImageAndClick(0, 98, 116, 125, 5, "Opening", 239, 497) ;skip through cards until results opening screen
 
-            Delay(1)
-            BonusDeluxeCheck := 0
-            loop 5 {
-                if(FindOrLoseImage(232, 228, 242, 244, , "BonusPackDeluxe", 0, failSafeTime))
-                    BonusDeluxeCheck += 1
-                Delay(1)
-            }
-            if(BonusDeluxeCheck = 5)
-                openPack := "Deluxe"
-            else
-                openPack := "BonusPack"
-
 ; Opening multiple bonus packs at once will prevent CheckPack() from working because the card positions have changed.
             ;CheckPack(true)
 
@@ -6855,4 +6880,42 @@ returnToSocial(adding := false){
         FindImageAndClick(143, 349, 161, 398, , "SearchFriend", 76, 453, 1500)
         FindImageAndClick(212, 499, 218, 519, , "SearchOK", 141, 280)
     }
+}
+
+procError_NoSaveData(){
+    bannedDir := A_ScriptDir . "\..\Accounts\banned"
+    archivedFiles := ""
+    archiveErrors := ""
+
+    if !FileExist(bannedDir) {
+        FileCreateDir, %bannedDir%
+        if (ErrorLevel)
+            archiveErrors .= "\n- Could not create Accounts\\banned."
+    }
+
+    if (loadedAccount = "" && loadDir != "" && "accountFileName" != "")
+        loadedAccount := "loadDir" . "\" . "accountFileName"
+
+    if (loadedAccount != "" && FileExist(loadedAccount)) {
+        SplitPath, loadedAccount, xmlFileName
+        xmlDestination := bannedDir . "\" . xmlFileName
+        FileMove, %loadedAccount%, %xmlDestination%, 1
+        if (ErrorLevel)
+            archiveErrors .= "\n- Could not move XML: " . loadedAccount
+        else
+            archivedFiles .= "\n- " . xmlFileName
+    } else {
+        archiveErrors .= "\n- The active account XML could not be found."
+    }
+
+    message := A_ScriptName . " detected an error indicating that no save data exists, or that an unknown account error occurred."
+    if (archivedFiles != "")
+        message .= "\nMoved the following account files to Accounts\\banned:" . archivedFiles
+    if (archiveErrors != "")
+        message .= "\nSome account files could not be archived:" . archiveErrors
+
+    LogToDiscord(message, ,true)
+    LogToFile("Restarted game. Reason: Banned account found")
+    restartGameInstance("Banned account found", "Banned")
+    return
 }

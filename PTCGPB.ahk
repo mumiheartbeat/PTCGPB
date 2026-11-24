@@ -13,7 +13,7 @@ global STATIC_BRUSH := 0
 
 githubUser := "mumiheartbeat"
 repoName := "PTCGPB"
-localVersion := "v8.0.1"
+localVersion := "v8.0.2"
 scriptFolder := A_ScriptDir
 zipPath := A_Temp . "\update.zip"g
 extractPath := A_Temp . "\update"
@@ -422,7 +422,7 @@ NextStep:
         global autoLaunchMonitor, autoUseGPTest, TestTime
         global CheckShinyPackOnly, TrainerCheck, FullArtCheck, RainbowCheck, ShinyCheck, CrownCheck
         global InvalidCheck, ImmersiveCheck, PseudoGodPack, minStars, Palkia, Dialga, Arceus, Shining
-        global Mew, Pikachu, Charizard, Mewtwo, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Latest, Paldean, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulersOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu, slowMotion, ocrLanguage, clientLanguage
+        global Mew, Pikachu, Charizard, Mewtwo, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Latest, PaldeanWonders, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulerOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu, slowMotion, ocrLanguage, clientLanguage
         global CurrentVisibleSection, heartBeatDelay, sendAccountXml, showcaseEnabled, showcaseURL, isDarkTheme
         global useBackgroundImage, tesseractPath, applyRoleFilters, debugMode, tesseractOption, statusMessage
         global s4tEnabled, s4tSilent, s4t3Dmnd, s4t4Dmnd, s4t1Star, s4tGholdengo, s4tWP, s4tWPMinCards
@@ -2141,12 +2141,12 @@ NextStep:
             IniRead, MegaAltaria, Settings.ini, UserSettings, MegaAltaria, 0
             IniRead, MegaCharizardY, Settings.ini, UserSettings, MegaCharizardY, 0
             IniRead, MegaGardevoir, Settings.ini, UserSettings, MegaGardevoir, 0
-            IniRead, Paldean, Settings.ini, UserSettings, Paldean, 0
+            IniRead, PaldeanWonders, Settings.ini, UserSettings, PaldeanWonders, 0
             IniRead, MegaShine, Settings.ini, UserSettings, MegaShine, 0
             IniRead, PulsingAura, Settings.ini, UserSettings, PulsingAura, 0
             IniRead, ParadoxDrive, Settings.ini, UserSettings, ParadoxDrive, 0
             IniRead, EverydayWonders, Settings.ini, UserSettings, EverydayWonders, 0
-            IniRead, RulersOfTheSkies, Settings.ini, UserSettings, RulersOfTheSkies, 0
+            IniRead, RulerOfTheSkies, Settings.ini, UserSettings, RulerOfTheSkies, 0
             IniRead, TeamRocketsAmbition, Settings.ini, UserSettings, TeamRocketsAmbition, 0
             IniRead, DeluxeMega, Settings.ini, UserSettings, DeluxeMega, 0
             IniRead, DualFusionMegaMewtwoX, Settings.ini, UserSettings, DualFusionMegaMewtwoX, 0
@@ -4358,8 +4358,8 @@ StartBot:
         Selected.Push("MegaGardevoir")
     if(Latest)
         Selected.Push("Latest")
-    if(Paldean)
-        Selected.Push("Paldean")
+    if(PaldeanWonders)
+        Selected.Push("PaldeanWonders")
     if(MegaShine)
         Selected.Push("MegaShine")
     if(PulsingAura)
@@ -4368,8 +4368,8 @@ StartBot:
         Selected.Push("ParadoxDrive")
     if(EverydayWonders)
         Selected.Push("EverydayWonders")
-    if(RulersOfTheSkies)
-        Selected.Push("RulersOfTheSkies")
+    if(RulerOfTheSkies)
+        Selected.Push("RulerOfTheSkies")
     if(TeamRocketsAmbition)
         Selected.Push("TeamRocketsAmbition")
     if(DeluxeMega)

@@ -5,7 +5,7 @@
 
 global githubUser := "mumiheartbeat"
 global repoName := "PTCGPB"
-global localVersion := "8.0.1(C)" 
+global localVersion := "8.0.2(C)" 
 global jsonFileName := ""
 
 global scaleParam
@@ -111,12 +111,12 @@ LoadSettingsFromIni() {
     IniRead, MegaAltaria, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaAltaria, 0
     IniRead, MegaCharizardY, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaCharizardY, 0
     IniRead, MegaGardevoir, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaGardevoir, 0
-    IniRead, Paldean, %A_ScriptDir%\..\..\Settings.ini, UserSettings, Paldean, 0
+    IniRead, PaldeanWonders, %A_ScriptDir%\..\..\Settings.ini, UserSettings, PaldeanWonders, 0
     IniRead, MegaShine, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaShine, 0
     IniRead, PulsingAura, %A_ScriptDir%\..\..\Settings.ini, UserSettings, PulsingAura, 0
     IniRead, ParadoxDrive, %A_ScriptDir%\..\..\Settings.ini, UserSettings, ParadoxDrive, 0
     IniRead, EverydayWonders, %A_ScriptDir%\..\..\Settings.ini, UserSettings, EverydayWonders, 0
-    IniRead, RulersOfTheSkies, %A_ScriptDir%\..\..\Settings.ini, UserSettings, RulersOfTheSkies, 0
+    IniRead, RulerOfTheSkies, %A_ScriptDir%\..\..\Settings.ini, UserSettings, RulerOfTheSkies, 0
     IniRead, TeamRocketsAmbition, %A_ScriptDir%\..\..\Settings.ini, UserSettings, TeamRocketsAmbition, 0
     IniRead, DeluxeMega, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DeluxeMega, 0
     IniRead, DualFusionMegaMewtwoX, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DualFusionMegaMewtwoX, 0
@@ -223,7 +223,7 @@ SaveAllSettings() {
   global autoLaunchMonitor, autoUseGPTest, TestTime
   global CheckShinyPackOnly, TrainerCheck, FullArtCheck, RainbowCheck, ShinyCheck, CrownCheck
   global InvalidCheck, ImmersiveCheck, PseudoGodPack, minStars, Palkia, Dialga, Arceus, Shining
-  global Mew, Pikachu, Charizard, Mewtwo, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, Paldean, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulersOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu, slowMotion, ocrLanguage, clientLanguage
+  global Mew, Pikachu, Charizard, Mewtwo, Solgaleo, Lunala, Buzzwole, Eevee, HoOh, Lugia, Suicune, Deluxe, MegaBlaziken, MegaGyarados, MegaAltaria, MegaCharizardY, MegaGardevoir, PaldeanWonders, MegaShine, PulsingAura, ParadoxDrive, EverydayWonders, RulerOfTheSkies, TeamRocketsAmbition, DeluxeMega, DualFusionMegaMewtwoX, DualFusionPikachu, slowMotion, ocrLanguage, clientLanguage
   global CurrentVisibleSection, heartBeatDelay, sendAccountXml, showcaseEnabled, showcaseURL, isDarkTheme
   global useBackgroundImage, tesseractPath, applyRoleFilters, debugMode, tesseractOption, statusMessage
   global s4tEnabled, s4tSilent, s4t3Dmnd, s4t4Dmnd, s4t1Star, s4tGholdengo, s4tWP, s4tWPMinCards, s4tFoil, s4tTrainer, s4tRainbow, s4tFullart, s4tShiny
@@ -344,12 +344,12 @@ SaveAllSettings() {
   IniWrite, %MegaAltaria%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaAltaria
   IniWrite, %MegaCharizardY%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaCharizardY
   IniWrite, %MegaGardevoir%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaGardevoir
-  IniWrite, %Paldean%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, Paldean
+  IniWrite, %PaldeanWonders%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, PaldeanWonders
   IniWrite, %MegaShine%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, MegaShine
   IniWrite, %PulsingAura%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, PulsingAura
   IniWrite, %ParadoxDrive%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, ParadoxDrive
   IniWrite, %EverydayWonders%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, EverydayWonders
-  IniWrite, %RulersOfTheSkies%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, RulersOfTheSkies
+  IniWrite, %RulerOfTheSkies%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, RulerOfTheSkies
   IniWrite, %TeamRocketsAmbition%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, TeamRocketsAmbition
   IniWrite, %DeluxeMega%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DeluxeMega
   IniWrite, %DualFusionMegaMewtwoX%, %A_ScriptDir%\..\..\Settings.ini, UserSettings, DualFusionMegaMewtwoX
@@ -655,7 +655,7 @@ Gui, Add, Tab3, x505 y5 w240 h130 vBPacks Theme0 cFFD700, B4s|B3s|B2s|B1s
 Gui, Tab, 1
 Gui, Add, Checkbox, % (DeluxeMega ? "Checked" : "") " vDeluxeMega x520 y35 " . sectionColor, % currentDictionary.Txt_DeluxeMega
 Gui, Add, Checkbox, % (TeamRocketsAmbition ? "Checked" : "") " vTeamRocketsAmbition x520 y60 " . sectionColor, % currentDictionary.Txt_TeamRocketsAmbition
-Gui, Add, Checkbox, % (RulersOfTheSkies ? "Checked" : "") " vRulersOfTheSkies x520 y85 " . sectionColor, % currentDictionary.Txt_RulersOfTheSkies
+Gui, Add, Checkbox, % (RulerOfTheSkies ? "Checked" : "") " vRulerOfTheSkies x520 y85 " . sectionColor, % currentDictionary.Txt_RulerOfTheSkies
 
 Gui, Tab, 2
 Gui, Add, Checkbox, % (EverydayWonders ? "Checked" : "") " vEverydayWonders x520 y35 " . sectionColor, % currentDictionary.Txt_EverydayWonders
@@ -664,7 +664,7 @@ Gui, Add, Checkbox, % (PulsingAura ? "Checked" : "") " vPulsingAura x520 y85 " .
 
 Gui, Tab, 3
 Gui, Add, Checkbox, % (MegaShine ? "Checked" : "") " vMegaShine x520 y35 " . sectionColor, % currentDictionary.Txt_MegaShine
-Gui, Add, Checkbox, % (Paldean ? "Checked" : "") " vPaldean x520 y60 " . sectionColor, % currentDictionary.Txt_Paldean
+Gui, Add, Checkbox, % (PaldeanWonders ? "Checked" : "") " vPaldeanWonders x520 y60 " . sectionColor, % currentDictionary.Txt_PaldeanWonders
 Gui, Add, Checkbox, % (MegaGardevoir ? "Checked" : "") " vMegaGardevoir x520 y85 " . sectionColor, % currentDictionary.Txt_MegaGardevoir
 ; B1 Series Group Box (3 items)
 Gui, Tab, 4
@@ -1724,8 +1724,8 @@ StartBot:
         Selected.Push("MegaCharizardY")
     if(MegaGardevoir)
         Selected.Push("MegaGardevoir")
-    if(Paldean)
-        Selected.Push("Paldean")
+    if(PaldeanWonders)
+        Selected.Push("PaldeanWonders")
     if(MegaShine)
         Selected.Push("MegaShine")
     if(PulsingAura)
@@ -1734,8 +1734,8 @@ StartBot:
         Selected.Push("ParadoxDrive")
     if(EverydayWonders)
         Selected.Push("EverydayWonders")
-    if(RulersOfTheSkies)
-        Selected.Push("RulersOfTheSkies")
+    if(RulerOfTheSkies)
+        Selected.Push("RulerOfTheSkies")
     if(TeamRocketsAmbition)
         Selected.Push("TeamRocketsAmbition")
     if(DeluxeMega)
