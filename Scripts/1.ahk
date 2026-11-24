@@ -1674,32 +1674,29 @@ FindOrLoseImage(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT", E
         restartGameInstance("*Stuck at " . imageName . "...")
     }
 
-    if(imageName = "Social" || imageName = "Country" || imageName = "Points") {
+    if(!needToReturnSocial){
         Path = %imagePath%Error_3Button.png ; look for Banned account
         pNeedle := GetNeedle(Path)
         vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 30, 310, 60, 460, searchVariation)
         if (vRet = 1) {
             procError_NoSaveData()
+        } else {
+            Path = %imagePath%Error.png ; Search for communication error
+            pNeedle := GetNeedle(Path)
+            ; ImageSearch within the region
+            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 120, 178, 155, 210, searchVariation)
+            if (vRet = 1) {
+                CreateStatusMessage("Error message in " . scriptName . ". Clicking retry...",,,, false)
+                adbClick_wbb(139, 386)
+                Sleep, 250
+                adbClick_wbb(141, 443)
+                Sleep, 250
+                adbClick_wbb(239, 217)
+                Sleep, 1000
+            }
         }
     }
-/*
-    if(!needToReturnSocial){
-        Path = %imagePath%Error.png ; Search for communication error
-        pNeedle := GetNeedle(Path)
-        ; ImageSearch within the region
-        vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 120, 178, 155, 210, searchVariation)
-        if (vRet = 1) {
-            CreateStatusMessage("Error message in " . scriptName . ". Clicking retry...",,,, false)
-            adbClick_wbb(139, 386)
-            Sleep, 250
-            adbClick_wbb(141, 443)
-            Sleep, 250
-            adbClick_wbb(239, 217)
-            Sleep, 1000
 
-        }
-    }
-*/
     ; ===== 每週特別包開包 =====
     static spLastCheck := 0
     if (imageName != "SpecialPack" && A_TickCount - spLastCheck > 700) {
@@ -1862,31 +1859,29 @@ FindImageAndClick(X1, Y1, X2, Y2, searchVariation := "", imageName := "DEFAULT",
             restartGameInstance("*Stuck at " . imageName . "...")
         }
 
-        if(imageName = "Social" || imageName = "Country" || imageName = "Points") {
+        if(!needToReturnSocial){
             Path = %imagePath%Error_3Button.png ; look for Banned account
             pNeedle := GetNeedle(Path)
             vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 30, 310, 60, 460, searchVariation)
             if (vRet = 1) {
                 procError_NoSaveData()
+            } else {
+                Path = %imagePath%Error.png ; Search for communication error
+                pNeedle := GetNeedle(Path)
+                ; ImageSearch within the region
+                vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 120, 178, 155, 210, searchVariation)
+                if (vRet = 1) {
+                    CreateStatusMessage("Error message in " . scriptName . ". Clicking retry...",,,, false)
+                    adbClick_wbb(139, 386)
+                    Sleep, 250
+                    adbClick_wbb(141, 443)
+                    Sleep, 250
+                    adbClick_wbb(239, 217)
+                    Sleep, 1000
+                }
             }
         }
-/*
-        if(!needToReturnSocial){
-            Path = %imagePath%Error.png ; Search for communication error
-            pNeedle := GetNeedle(Path)
-            ; ImageSearch within the region
-            vRet := Gdip_ImageSearch_wbb(pBitmap, pNeedle, vPosXY, 120, 178, 155, 210, searchVariation)
-            if (vRet = 1) {
-                CreateStatusMessage("Error message in " . scriptName . ". Clicking retry...",,,, false)
-                adbClick_wbb(139, 386)
-                Sleep, 250
-                adbClick_wbb(141, 443)
-                Sleep, 250
-                adbClick_wbb(239, 217)
-                Sleep, 1000
-            }
-        }
-*/
+
         Path = %imagePath%NoResponse.png
         pNeedle := GetNeedle(Path)
         ; ImageSearch within the region
